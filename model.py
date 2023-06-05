@@ -1,6 +1,6 @@
 from keras import layers
 from keras.models import Model
-from model_utils import residual_block
+from model_utils import residual_block, activation_layer
 
 
 def train_model(input_dim, output_dim, activation="leaky_relu", dropout=0.2):
@@ -41,5 +41,14 @@ def train_model(input_dim, output_dim, activation="leaky_relu", dropout=0.2):
 
     blstm = layers.Bidirectional(layers.LSTM(128, return_sequences=True))(blstm)
 
+    # Dense
+    d = layers.Dense(256)(blstm)
+    d = activation_layer(d, activation="leaky_relu")
+    d = layers.Dropout(dropout)(d)
 
+    # Classification
+    output = layers.Dense(output_dim + 1, activation="softmax", name="output")(d)
 
+    model = Model(inputs=inputs, outputs=output)
+
+    return model
