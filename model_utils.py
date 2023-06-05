@@ -6,8 +6,6 @@ def activation_layer(layer, activation="relu", alpha=0.1):
         layer = layers.ReLU()(layer)
     elif activation == "leaky_relu":
         layer = layers.LeakyReLU()(layer)
-    else:
-        layer = layers.LeakyReLU(alpha=alpha)(layer)
 
     return layer
 
