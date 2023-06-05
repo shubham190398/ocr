@@ -1,7 +1,4 @@
-import tensorflow as tf
-from tensorflow import keras
 from keras import layers
-from keras.models import Model
 
 
 def activation_layer(layer, activation="relu", alpha=0.1):
