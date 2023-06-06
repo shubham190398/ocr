@@ -5,6 +5,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 from PIL import Image
 
+
 class NormalImage(ABC):
     def __init__(self) -> None:
         super().__init__()
@@ -42,3 +43,58 @@ class NormalImage(ABC):
     @abstractmethod
     def __call__(self) -> np.ndarray:
         pass
+
+
+class CVImage(NormalImage):
+    init_successful = False
+
+    def __init__(
+            self,
+            image: typing.Union[str, np.ndarray],
+            method: int = cv2.IMREAD_COLOR,
+            path: str = "",
+            color: str = "BGR"
+    ) -> None:
+        super().__init__()
+
+        if isinstance(image, str):
+            if not os.path.exists(image):
+                raise FileNotFoundError(f"Image {image} not found.")
+
+            self.image = cv2.imread(image, method)
+            self.path = image
+            self.color = "BGR"
+
+        elif isinstance(image, np.ndarray):
+            self.image = image
+            self.path = path
+            self.color = color
+
+        else:
+            raise TypeError(f"Image must be either path to image or numpy.ndarray, not {type(image)}")
+
+        self.method = method
+
+        if self.image is None:
+            return None
+
+        self.init_successful = True
+        self.width = self.image.shape[1]
+        self.height = self.image.shape[0]
+        self.channels = 1 if len(self.image.shape) == 2 else self.image.shape[2]
+
+    @property
+    def image(self) -> np.ndarray:
+        return self.image
+
+    @image.setter
+    def image(self, value: np.ndarray):
+        self.image = value
+
+    @property
+    def shape(self) -> tuple:
+        return self.image.shape
+
+    @property
+    def center(self) -> tuple:
+        return self.width // 2, self.height // 2
