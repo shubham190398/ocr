@@ -116,3 +116,20 @@ class RandomErodeDilate(Augmentor):
         image.update(img)
 
         return image, annotation
+
+
+class RandomGaussianBlur(Augmentor):
+    def __init(
+            self,
+            random_chance: float = 0.5,
+            log_level: int = logging.INFO,
+            sigma: typing.Union[int, float] = 0.5,
+    ) -> None:
+        super(RandomGaussianBlur, self).__init__(random_chance, log_level)
+        self.sigma = sigma
+
+    @randomness_decorator
+    def __call__(self, image: NormalImage, annotation: typing.Any) -> typing.Tuple[NormalImage, typing.Any]:
+        img = cv2.GaussianBlur(image.numpy(), (0, 0), self.sigma)
+        image.update(img)
+        return image, annotation
