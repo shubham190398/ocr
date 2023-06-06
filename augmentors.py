@@ -21,15 +21,35 @@ def randomness_decorator(func):
 
 class Augmentor:
     def __init__(self, random_chance: float = 0.5, log_level: int = logging.INFO) -> None:
-        self._random_chance = random_chance
-        self._log_level = log_level
+        self.random_chance = random_chance
+        self.log_level = log_level
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.setLevel(logging.INFO)
 
-        assert 0 <= self._random_chance <= 1.0, "random chance must be between 0.0 and 1.0"
+        assert 0 <= self.random_chance <= 1.0, "random chance must be between 0.0 and 1.0"
 
     @randomness_decorator
     def __call__(self, image: NormalImage, annotation: typing.Any) -> typing.Tuple[NormalImage, typing.Any]:
         # do the augmentation here
         return image, annotation
 
+
+class RandomBrightness(Augmentor):
+    def __init__(self, random_chance: float = 0.5, delta: int = 100, log_level: int = logging.INFO) -> None:
+        super(RandomBrightness, self).__init__(random_chance, log_level)
+
+        assert 0 <= delta <= 255.0, "Delta must be between 0.0 and 255.0"
+
+        self.delta = delta
+
+    @randomness_decorator
+    def __call__(self, image: NormalImage, annotation: typing.Any) -> typing.Tuple[NormalImage, typing.Any]:
+        value = 1 + np.random.uniform(-self.delta, self.delta)/255
+        hsv = np.array(image.HSV(), dtype=np.float32)
+        hsv[:, :, 1] = hsv[:, :, 1] * value
+        hsv[:, :, 2] = hsv[:, :, 2] * value
+        hsv = np.uint8(np.clip(hsv, 0, 255))
+        img = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
+        image.update(img)
+
+        return image, annotation
