@@ -3,7 +3,6 @@ import typing
 import cv2
 from abc import ABC, abstractmethod
 import numpy as np
-from PIL import Image
 
 
 class NormalImage(ABC):
