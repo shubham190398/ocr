@@ -53,3 +53,42 @@ class RandomBrightness(Augmentor):
         image.update(img)
 
         return image, annotation
+
+
+class RandomRotate(Augmentor):
+    def __init__(
+            self,
+            random_chance: float = 0.5,
+            angle: typing.Union[int, typing.List] = 30,
+            bordervalue: typing.Tuple[int, int, int] = None,
+            log_level: int = logging.INFO,
+    ) -> None:
+        super(RandomRotate, self).__init__(random_chance, log_level)
+        self.angle = angle
+        self.bordervalue = bordervalue
+
+    @randomness_decorator
+    def __call__(self, image: NormalImage, annotation: typing.Any) -> typing.Tuple[NormalImage, typing.Any]:
+        if isinstance(self.angle, list):
+            angle = float(np.random.choice(self.angle))
+        else:
+            angle = float(np.random.uniform(-self.angle, self.angle))
+
+        bordervalue = np.random.randint(0, 255, 3) if self.bordervalue is None else self.bordervalue
+        bordervalue = [int(val) for val in bordervalue]
+
+        center_x, center_y = image.center
+        M = cv2.getRotationMatrix2D((center_x, center_y), angle, 1.0)
+        cos = np.abs(M[0, 0])
+        sin = np.abs(M[0, 1])
+
+        new_width = int((image.height * sin) + (image.width * cos))
+        new_height = int((image.height * cos) + (image.width * sin))
+
+        M[0, 2] += (new_width / 2) - center_x
+        M[1, 2] += (new_height / 2) - center_y
+
+        img = cv2.warpAffine(image.numpy(), M, (new_width, new_height), borderValue=bordervalue)
+        image.update(img)
+
+        return image, annotation
