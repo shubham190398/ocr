@@ -47,6 +47,7 @@ class NormalImage(ABC):
 class CVImage(NormalImage):
     init_successful = False
 
+    # noinspection PyReturnFromInit
     def __init__(
             self,
             image: typing.Union[str, np.ndarray],
