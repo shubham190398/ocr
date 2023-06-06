@@ -16,3 +16,14 @@ class Transformer:
 
     def __call__(self, data: typing.Any, label: typing.Any, *args, **kwargs):
         raise NotImplementedError
+
+
+class ExpandDims(Transformer):
+    def __init__(self, axis: int = -1):
+        super().__init__()
+        self.axis = axis
+
+    def __call__(self, data: np.ndarray, label: np.ndarray):
+        return np.expand_dims(data, self.axis), label
+
+
