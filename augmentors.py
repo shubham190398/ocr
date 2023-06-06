@@ -92,3 +92,27 @@ class RandomRotate(Augmentor):
         image.update(img)
 
         return image, annotation
+
+
+class RandomErodeDilate(Augmentor):
+    def __init__(
+        self,
+        random_chance: float = 0.5,
+        kernel_size: typing.Tuple[int, int] = (1, 1),
+        log_level: int = logging.INFO,
+    ) -> None:
+        super(RandomErodeDilate, self).__init__(random_chance, log_level)
+        self.kernel_size = kernel_size
+
+    @randomness_decorator
+    def __call__(self, image: NormalImage, annotation: typing.Any) -> typing.Tuple[NormalImage, typing.Any]:
+        kernel = np.ones(self.kernel_size, np.uint8)
+
+        if np.random.rand() <= 0.5:
+            img = cv2.erode(image.numpy(), kernel, iterations=1)
+        else:
+            img = cv2.dilate(image.numpy(), kernel, iterations=1)
+
+        image.update(img)
+
+        return image, annotation
