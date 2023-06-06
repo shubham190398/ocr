@@ -98,3 +98,42 @@ class CVImage(NormalImage):
     @property
     def center(self) -> tuple:
         return self.width // 2, self.height // 2
+
+    def RGB(self) -> np.ndarray:
+        if self.color == "RGB":
+            return self.image
+        elif self.color == "BGR":
+            return cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
+        else:
+            raise ValueError(f"Unknown color format {self.color}")
+
+    def HSV(self) -> np.ndarray:
+        if self.color == "BGR":
+            return cv2.cvtColor(self.image, cv2.COLOR_BGR2HSV)
+        elif self.color == "RGB":
+            return cv2.cvtColor(self.image, cv2.COLOR_RGB2HSV)
+        else:
+            raise ValueError(f"Unknown color format {self.color}")
+
+    def update(self, image: np.ndarray):
+        if isinstance(image, np.ndarray):
+            self.image = image
+            self.width = self.image.shape[1]
+            self.height = self.image.shape[0]
+            self.channels = 1 if len(self.image.shape) == 2 else self.image.shape[2]
+            return self
+
+        else:
+            raise TypeError(f"image must be numpy.ndarray, not {type(image)}")
+
+    def flip(self, axis: int = 0):
+        if axis not in [0, 1]:
+            raise ValueError(f"axis must be either 0 or 1, not {axis}")
+        self.image = self.image[:, ::-1] if axis == 0 else self.image[::-1]
+        return self
+
+    def numpy(self) -> np.ndarray:
+        return self.image
+
+    def __call__(self) -> np.ndarray:
+        return self.image
