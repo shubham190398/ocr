@@ -77,3 +77,14 @@ class ImageResizer(Transformer):
         image.update(image_numpy)
 
         return image, label
+
+
+class LabelIndexer(Transformer):
+    def __init__(self, vocab: typing.List[str]) -> None:
+        super().__init__()
+        self.vocab = vocab
+
+    # noinspection PyMethodOverriding
+    def __call__(self, data: np.ndarray, label: np.ndarray):
+        return data, np.array([self.vocab.index(t) for t in label if t in self.vocab])
+
