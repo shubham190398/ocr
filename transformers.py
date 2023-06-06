@@ -21,7 +21,7 @@ class Transformer:
 
 class ExpandDims(Transformer):
     def __init__(self, axis: int = -1):
-        super().__init__()
+        super(ExpandDims, self).__init__()
         self.axis = axis
 
     # noinspection PyMethodOverriding
@@ -37,7 +37,7 @@ class ImageResizer(Transformer):
             keep_aspect_ratio: bool = False,
             padding_color: typing.Tuple[int] = (0, 0, 0)
     ):
-        super().__init__()
+        super(ImageResizer, self).__init__()
         self.width = width
         self.height = height
         self.keep_aspect_ratio = keep_aspect_ratio
@@ -81,7 +81,7 @@ class ImageResizer(Transformer):
 
 class LabelIndexer(Transformer):
     def __init__(self, vocab: typing.List[str]) -> None:
-        super().__init__()
+        super(LabelIndexer, self).__init__()
         self.vocab = vocab
 
     # noinspection PyMethodOverriding
@@ -91,7 +91,7 @@ class LabelIndexer(Transformer):
 
 class LabelPadding(Transformer):
     def __init__(self, max_word_length: int, padding_value: int) -> None:
-        super().__init__()
+        super(LabelPadding, self).__init__()
         self.max_word_length = max_word_length
         self.padding_value = padding_value
 
