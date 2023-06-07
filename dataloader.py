@@ -134,3 +134,7 @@ class DataLoader:
         val_data_provider.dataset = self.dataset[int(len(self.dataset) * split):]
 
         return train_data_provider, val_data_provider
+
+    def to_csv(self, path: str, index: bool = False) -> None:
+        df = pd.DataFrame(self.dataset)
+        df.to_csv(path, index=index)
