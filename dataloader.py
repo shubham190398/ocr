@@ -50,3 +50,19 @@ class DataLoader:
 
     def __len__(self):
         return int(np.ceil(len(self.dataset) / self.batch_size))
+
+    @property
+    def augmentors(self) -> typing.List[Augmentor]:
+        return self.augmentors
+
+    @augmentors.setter
+    def augmentors(self, augmentors: typing.List[Augmentor]):
+        for augmentor in augmentors:
+            if isinstance(augmentor, Augmentor):
+                if self.augmentors is not None:
+                    self.augmentors.append(augmentor)
+                else:
+                    self.augmentors = [augmentor]
+
+            else:
+                self.logger.warning(f"Augmentor {augmentor} is not an instance of Augmentor.")
