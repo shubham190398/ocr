@@ -28,12 +28,13 @@ class DataLoader:
         self.data_preprocessors = [] if data_preprocessors is None else data_preprocessors
         self.batch_size = batch_size
         self.shuffle = shuffle
-        self.epoch = initial_epoch
+        self._epoch = initial_epoch
         self.augmentors = [] if augmentors is None else augmentors
         self.transformers = [] if transformers is None else transformers
         self.skip_validation = skip_validation
         self.limit = limit
         self.use_cache = use_cache
+        self._step = 0
         self.cache = {}
         self.on_epoch_end_remove = []
         self.logger = logging.getLogger(self.__class__.__name__)
@@ -85,14 +86,14 @@ class DataLoader:
 
     @property
     def epoch(self) -> int:
-        return self.epoch
+        return self._epoch
 
     @property
     def step(self) -> int:
-        return self.step
+        return self._step
 
     def on_epoch_end(self):
-        self.epoch += 1
+        self._epoch += 1
 
         if self.shuffle:
             np.random.shuffle(self.dataset)
@@ -102,3 +103,4 @@ class DataLoader:
             self.dataset.remove(remove)
 
         self.on_epoch_end_remove = []
+
