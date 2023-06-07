@@ -47,3 +47,6 @@ class DataLoader:
         if limit:
             self.logger.info(f"Limiting dataset to {limit} samples")
             self.dataset = self.dataset[:limit]
+
+    def __len__(self):
+        return int(np.ceil(len(self.dataset) / self.batch_size))
