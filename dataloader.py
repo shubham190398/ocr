@@ -82,3 +82,12 @@ class DataLoader:
 
             else:
                 self.logger.warning(f"Transformer {transformer} is not an instance of Transformer.")
+
+    @property
+    def epoch(self) -> int:
+        return self.epoch
+
+    @property
+    def step(self) -> int:
+        return self.step
+
