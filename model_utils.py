@@ -1,6 +1,9 @@
 import tensorflow as tf
 from keras import layers
 from keras.metrics import Metric
+from keras.callbacks import Callback
+import onnx
+import tf2onnx
 
 
 def activation_layer(layer, activation="relu", alpha=0.1):
@@ -90,3 +93,26 @@ class ErrorMetric(Metric):
             "CER": tf.math.divide_no_nan(self.cer_accumulator, tf.cast(self.batch_counter, tf.float32)),
             "WER": tf.math.divide_no_nan(self.wer_accumulator, tf.cast(self.batch_counter, tf.float32))
         }
+
+
+class Model2Onnx(Callback):
+    def __init__(self, saved_model_path: str, metadata: dict = None) -> None:
+        super().__init__()
+        self.saved_model_path = saved_model_path
+        self.metadata = metadata
+        self.onnx_model_path = ""
+
+    def on_train_end(self, logs=None):
+        self.model.load_weights(self.saved_model_path)
+        self.onnx_model_path = self.saved_model_path.replace(".h5", ".onnx")
+        tf2onnx.convert.from_keras(self.model, output_path=self.onnx_model_path)
+
+        if self.metadata and isinstance(self.metadata, dict):
+            onnx_model = onnx.load(self.onnx_model_path)
+
+            for key, value in self.metadata.items():
+                meta = onnx_model.metadata_props.add()
+                meta.key = key
+                meta.value = value
+
+            onnx.save(onnx_model, self.onnx_model_path)
