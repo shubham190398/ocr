@@ -124,3 +124,13 @@ class DataLoader:
             return DataLoader.validate_list_dataset(dataset.values.tolist())
         else:
             raise TypeError("Dataset must be a path, list or pandas dataframe.")
+
+    def split(self, split: float = 0.9, shuffle: bool = True) -> typing.Tuple[typing.Any, typing.Any]:
+        if shuffle:
+            np.random.shuffle(self.dataset)
+
+        train_data_provider, val_data_provider = copy.deepcopy(self), copy.deepcopy(self)
+        train_data_provider.dataset = self.dataset[:int(len(self.dataset) * split)]
+        val_data_provider.dataset = self.dataset[int(len(self.dataset) * split):]
+
+        return train_data_provider, val_data_provider
