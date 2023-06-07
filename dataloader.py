@@ -147,3 +147,8 @@ class DataLoader:
         batch_annotations = [self.dataset[index] for index in batch_indexes]
 
         return batch_annotations
+
+    def __iter__(self):
+        for item in (self[i] for i in range(len(self))):
+            yield item
+
