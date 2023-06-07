@@ -66,4 +66,23 @@ class ErrorMetric(Metric):
 
     def update_state(self, y_true, y_pred, sample_weight=None):
         input_shape = tf.keras.backend.shape(y_pred)
+        input_length = tf.ones(shape=input_shape[0], dtype="int32") * tf.cast(input_shape[1], "int32")
+        decode_predicted, log = tf.keras.backend.ctc_decode(y_pred, input_length, greedy=True)
+
+        predicted_labels_sparse = tf.keras.backend.ctc_label_dense_to_sparse(decode_predicted[0], input_length)
+        true_labels_sparse = tf.cast(tf.keras.backend.ctc_label_dense_to_sparse(y_true, input_length), "int64")
+
+        predicted_labels_sparse = tf.sparse.retain(predicted_labels_sparse,
+                                                   tf.not_equal(predicted_labels_sparse.values, -1))
+        true_labels_sparse = tf.sparse.retain(true_labels_sparse,
+                                              tf.not_equal(true_labels_sparse.values, self.padding_token))
+
+        distance = tf.edit_distance(predicted_labels_sparse, true_labels_sparse, normalize=True)
+
+        self.cer_accumulator.assign_add(tf.reduce_sum(distance))
+
+        self.batch_counter.assign_add(len(y_true))
+
+        self.wer_accumulator.assign_add(tf.reduce_sum(tf.cast(tf.not_equal(distance, 0), tf.float32)))
+
 
