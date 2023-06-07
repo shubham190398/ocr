@@ -112,14 +112,15 @@ class DataLoader:
 
         return validated_data
 
+    # noinspection PyMethodMayBeStatic
     def validate(self, dataset: typing.Union[str, list, pd.DataFrame]) -> typing.Union[list, str]:
         if isinstance(dataset, str):
             if os.path.exists(dataset):
                 return dataset
         elif isinstance(dataset, list):
-            return self.validate_list_dataset(dataset)
+            return DataLoader.validate_list_dataset(dataset)
         elif isinstance(dataset, pd.DataFrame):
             # noinspection PyTypeChecker
-            return self.validate_list_dataset(dataset.values.tolist())
+            return DataLoader.validate_list_dataset(dataset.values.tolist())
         else:
             raise TypeError("Dataset must be a path, list or pandas dataframe.")
