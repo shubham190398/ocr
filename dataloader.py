@@ -138,3 +138,12 @@ class DataLoader:
     def to_csv(self, path: str, index: bool = False) -> None:
         df = pd.DataFrame(self.dataset)
         df.to_csv(path, index=index)
+
+    def get_batch_annotations(self, index: int) -> typing.List:
+        self._step = index
+        start_index = index * self.batch_size
+
+        batch_indexes = [i for i in range(start_index, start_index + self.batch_size) if i < len(self.dataset)]
+        batch_annotations = [self.dataset[index] for index in batch_indexes]
+
+        return batch_annotations
