@@ -66,3 +66,19 @@ class DataLoader:
 
             else:
                 self.logger.warning(f"Augmentor {augmentor} is not an instance of Augmentor.")
+
+    @property
+    def transformers(self) -> typing.List[Transformer]:
+        return self.transformers
+
+    @transformers.setter
+    def transformers(self, transformers: typing.List[Transformer]):
+        for transformer in transformers:
+            if isinstance(transformer, Transformer):
+                if self.transformers is not None:
+                    self.transformers.append(transformer)
+                else:
+                    self.transformers = [transformer]
+
+            else:
+                self.logger.warning(f"Transformer {transformer} is not an instance of Transformer.")
