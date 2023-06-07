@@ -179,3 +179,19 @@ class DataLoader:
             annotation = annotation.numpy()
 
         return data, annotation
+
+    def __getitem__(self, index: int):
+        dataset_batch = self.get_batch_annotations(index)
+
+        batch_data, batch_annotations = [], []
+        for index, batch in enumerate(dataset_batch):
+            data, annotation = self.process_data(batch)
+
+            if data is None or annotation is None:
+                self.logger.warning("Data or annotation is None, skipping.")
+                continue
+
+            batch_data.append(data)
+            batch_annotations.append(annotation)
+
+        return np.array(batch_data), np.array(batch_annotations)
