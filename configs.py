@@ -1,5 +1,6 @@
 import os
 import yaml
+from datetime import datetime
 
 
 class BaseModelConfigs:
@@ -39,3 +40,17 @@ class BaseModelConfigs:
             setattr(config, key, value)
 
         return config
+
+
+class ModelConfigs(BaseModelConfigs):
+    def __init__(self):
+        super().__init__()
+        self.model_path = os.path.join("Models", datetime.strftime(datetime.now(), "%Y%m%d%H%M"))
+        self.vocab = ""
+        self.height = 256
+        self.width = 512
+        self.max_test_length = 0
+        self.batch_size = 32
+        self.learning_rate = 0.0001
+        self.train_epochs = 10000
+        self.train_workers = 20
