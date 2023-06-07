@@ -1,5 +1,6 @@
 import tensorflow as tf
 from keras import layers
+from keras.metrics import Metric
 
 
 def activation_layer(layer, activation="relu", alpha=0.1):
@@ -53,3 +54,16 @@ class CTCloss(tf.keras.losses.Loss):
         loss = self.loss_fn(y_true, y_pred, input_length, label_length)
 
         return loss
+
+
+class ErrorMetric(Metric):
+    def __init__(self, padding_token, name="ErrorMetric", **kwargs):
+        super(ErrorMetric, self).__init__(name=name, **kwargs)
+        self.cer_accumulator = tf.Variable(0.0, name="cer_accumulator", dtype=tf.float32)
+        self.wer_accumulator = tf.Variable(0.0, name="wer_accumulator", dtype=tf.float32)
+        self.batch_counter = tf.Variable(0, name="batch_counter", dtype=tf.int32)
+        self.padding_token = padding_token
+
+    def update_state(self, y_true, y_pred, sample_weight=None):
+        input_shape = tf.keras.backend.shape(y_pred)
+
