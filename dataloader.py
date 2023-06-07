@@ -171,3 +171,11 @@ class DataLoader:
         for objects in [self._augmentors, self._transformers]:
             for _object in objects:
                 data, annotation = _object(data, annotation)
+
+        if not isinstance(data, np.ndarray):
+            data = data.numpy()
+
+        if not isinstance(annotation, (np.ndarray, int, float, str, np.uint8, float)):
+            annotation = annotation.numpy()
+
+        return data, annotation
