@@ -35,7 +35,7 @@ class DataLoader:
         self.limit = limit
         self.use_cache = use_cache
         self.cache = {}
-        self.on_epoch_and_remove = []
+        self.on_epoch_end_remove = []
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.setLevel(log_level)
 
@@ -91,3 +91,14 @@ class DataLoader:
     def step(self) -> int:
         return self.step
 
+    def on_epoch_end(self):
+        self.epoch += 1
+
+        if self.shuffle:
+            np.random.shuffle(self.dataset)
+
+        for remove in self.on_epoch_end_remove:
+            self.logger.warning(f"Removing {remove} from dataset")
+            self.dataset.remove(remove)
+
+        self.on_epoch_end_remove = []
