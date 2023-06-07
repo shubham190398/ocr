@@ -105,7 +105,7 @@ class DataLoader:
         self.on_epoch_end_remove = []
 
     @staticmethod
-    def validate_list_dataset(self, dataset: list) -> list:
+    def validate_list_dataset(dataset: list) -> list:
         validated_data = [data for data in tqdm(dataset, desc="Validating Dataset") if os.path.exists(data[0])]
         if not validated_data:
             raise FileNotFoundError("No valid data found in dataset.")
