@@ -80,7 +80,7 @@ class ImageResizer(Transformer):
 
 
 class LabelIndexer(Transformer):
-    def __init__(self, vocab: typing.List[str]) -> None:
+    def __init__(self, vocab: str) -> None:
         super(LabelIndexer, self).__init__()
         self.vocab = vocab
 
