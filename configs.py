@@ -47,7 +47,7 @@ class ModelConfigs(BaseModelConfigs):
         super().__init__()
         self.model_path = os.path.join("Models", datetime.strftime(datetime.now(), "%Y%m%d%H%M"))
         self.vocab = ""
-        self.height = 256
+        self.height = 128
         self.width = 512
         self.max_test_length = 0
         self.batch_size = 32
