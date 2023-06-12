@@ -11,6 +11,7 @@ def conv_block(
         dropout=False,
         pooling=True,
         upsampling=False,
+        merge=None
 ):
     if not upsampling:
         x = layers.Conv2D(filter_num, kernel_stride, activation=activation,
@@ -20,7 +21,7 @@ def conv_block(
     else:
         up = layers.Conv2D(filter_num, kernel_stride-1, activation=activation, padding=padding,
                            kernel_initializer=kernel_initializer)(layers.UpSampling2D(size=(2, 2)))(x)
-        x = layers.concatenate([x, up], axis=3)
+        x = layers.concatenate([merge, up], axis=3)
         x = layers.Conv2D(filter_num, kernel_stride, activation=activation,
                           padding=padding, kernel_initializer=kernel_initializer)(x)
         x = layers.Conv2D(filter_num, kernel_stride, activation=activation,
