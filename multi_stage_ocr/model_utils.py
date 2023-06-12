@@ -31,7 +31,7 @@ def conv_block(
     y = copy.deepcopy(x)
 
     if dropout:
-        drop = layers.Dropout(rate=0.5)(y)
+        drop = layers.Dropout(0.5)(y)
 
         if pooling:
             y = layers.MaxPooling2D(pool_size=(2, 2))(drop)
