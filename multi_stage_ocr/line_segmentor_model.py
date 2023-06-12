@@ -16,10 +16,10 @@ def unet(pretrained_weights=None, input_size=(512, 512, 1)):
 
     x, drop5 = conv_block(x, filter_num=1024, kernel_stride=3, dropout=True, pooling=False, upsampling=False)
 
-    x = conv_block(x, filter_num=512, kernel_stride=3, dropout=False, pooling=False, upsampling=True)
+    x, conv6 = conv_block(x, filter_num=512, kernel_stride=3, pooling=False, upsampling=True, merge=drop4)
 
-    x = conv_block(x, filter_num=256, kernel_stride=3, dropout=False, pooling=False, upsampling=True)
+    x, conv7 = conv_block(x, filter_num=256, kernel_stride=3, pooling=False, upsampling=True, merge=conv3)
 
-    x = conv_block(x, filter_num=128, kernel_stride=3, dropout=False, pooling=False, upsampling=True)
+    x, conv8 = conv_block(x, filter_num=128, kernel_stride=3, pooling=False, upsampling=True, merge=conv2)
 
-    x = conv_block(x, filter_num=64, kernel_stride=3, dropout=False, pooling=False, upsampling=True)
+    x, conv9 = conv_block(x, filter_num=64, kernel_stride=3, pooling=False, upsampling=True, merge=conv1)
