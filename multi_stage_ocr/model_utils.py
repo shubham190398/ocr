@@ -36,7 +36,9 @@ def conv_block(
         if pooling:
             y = layers.MaxPooling2D(pool_size=(2, 2))(drop)
 
-        return y, drop
+            return y, drop
+
+        return drop, drop
 
     if pooling:
         y = layers.MaxPooling2D(pool_size=(2, 2))(y)
