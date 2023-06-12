@@ -36,3 +36,7 @@ def unet(pretrained_weights=None, input_size=(512, 512, 1)):
         model.load_weights(pretrained_weights)
 
     return model
+
+
+model_unet = unet()
+model_unet.summary()

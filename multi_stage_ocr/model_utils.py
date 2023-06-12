@@ -21,7 +21,7 @@ def conv_block(
                           padding=padding, kernel_initializer=kernel_initializer)(x)
     else:
         up = layers.Conv2D(filter_num, kernel_stride-1, activation=activation, padding=padding,
-                           kernel_initializer=kernel_initializer)(layers.UpSampling2D(size=(2, 2)))(x)
+                           kernel_initializer=kernel_initializer)(layers.UpSampling2D(size=(2, 2))(x))
         x = layers.concatenate([merge, up], axis=3)
         x = layers.Conv2D(filter_num, kernel_stride, activation=activation,
                           padding=padding, kernel_initializer=kernel_initializer)(x)
@@ -31,7 +31,7 @@ def conv_block(
     y = copy.deepcopy(x)
 
     if dropout:
-        drop = layers.Dropout(dropout=0.5)(y)
+        drop = layers.Dropout(rate=0.5)(y)
 
         if pooling:
             y = layers.MaxPooling2D(pool_size=(2, 2))(drop)
