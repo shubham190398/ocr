@@ -1,5 +1,4 @@
 from keras import layers
-import copy
 
 
 def conv_block(
