@@ -18,7 +18,7 @@ def conv_block(
         x = layers.Conv2D(filter_num, kernel_stride, activation=activation,
                           padding=padding, kernel_initializer=kernel_initializer)(x)
     else:
-        up = layers.Conv2D(filter_num, kernel_stride, activation=activation, padding=padding,
+        up = layers.Conv2D(filter_num, kernel_stride-1, activation=activation, padding=padding,
                            kernel_initializer=kernel_initializer)(layers.UpSampling2D(size=(2, 2)))(x)
         x = layers.concatenate([x, up], axis=3)
         x = layers.Conv2D(filter_num, kernel_stride, activation=activation,

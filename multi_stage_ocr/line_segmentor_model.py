@@ -16,3 +16,4 @@ def unet(pretrained_weights=None, input_size=(512, 512, 1)):
 
     x = conv_block(x, filter_num=1024, kernel_stride=3, dropout=True, pooling=False, upsampling=False)
 
+    x = conv_block(x, filter_num=512)
