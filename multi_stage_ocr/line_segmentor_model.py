@@ -1,6 +1,7 @@
 from model_utils import conv_block
 from keras.layers import Conv2D, Input
 from keras.optimizers import Adam
+from keras.models import Model
 
 
 def unet(pretrained_weights=None, input_size=(512, 512, 1)):
@@ -23,3 +24,8 @@ def unet(pretrained_weights=None, input_size=(512, 512, 1)):
     x, conv8 = conv_block(x, filter_num=128, kernel_stride=3, pooling=False, upsampling=True, merge=conv2)
 
     x, conv9 = conv_block(x, filter_num=64, kernel_stride=3, pooling=False, upsampling=True, merge=conv1)
+
+    conv9 = Conv2D(2, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv9)
+    conv10 = Conv2D(1, 1, activation='sigmoid')(conv9)
+
+    model = Model(inputs, conv10)
