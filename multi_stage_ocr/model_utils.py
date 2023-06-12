@@ -1,4 +1,5 @@
 from keras import layers
+import copy
 
 
 def conv_block(
@@ -27,10 +28,12 @@ def conv_block(
         x = layers.Conv2D(filter_num, kernel_stride, activation=activation,
                           padding=padding, kernel_initializer=kernel_initializer)(x)
 
+    y = copy.deepcopy(x)
+
     if dropout:
-        x = layers.Dropout(dropout=0.5)(x)
+        y = layers.Dropout(dropout=0.5)(y)
 
     if pooling:
-        x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+        y = layers.MaxPooling2D(pool_size=(2, 2))(y)
 
-    return x
+    return y, x
