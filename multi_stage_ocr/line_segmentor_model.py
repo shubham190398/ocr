@@ -52,5 +52,5 @@ def unet(pretrained_weights=None, input_size=(512, 512, 1)):
     return model
 
 
-model_unet = unet()
-model_unet.summary()
+# model_unet = unet()
+# model_unet.summary()
