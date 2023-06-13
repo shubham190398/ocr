@@ -34,7 +34,7 @@ def batch_generator(dir_path, image_names, batch_size):
             _, im = cv2.threshold(im, 150, 255, cv2.THRESH_BINARY_INV)
             im = cv2.resize(im, (512, 512))
             im = np.expand_dims(im, axis=-1)
-            im /= 255
+            im = im / 255
 
             mask = cv2.imread(f"{dir_path}/{im_name}_mask.png", cv2.IMREAD_GRAYSCALE)
             mask = cv2.resize(mask, (512, 512))

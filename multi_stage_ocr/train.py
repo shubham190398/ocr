@@ -15,7 +15,7 @@ def main():
 
     model_checkpoint = ModelCheckpoint('weights{epoch:8d}.h5', save_weights_only=True, period=5)
     model.fit_generator(
-        batch_generator(dir_path, training_images, 32),
+        batch_generator(dir_path, training_images, 16),
         epochs=50,
         steps_per_epoch=1000,
         validation_data=batch_generator(dir_path, testing_images, 8),
