@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import os
 import cv2
+import numpy as np
+import random
 
 
 def display(img, seg_img):
@@ -19,6 +21,3 @@ def preprocessing(dir_path):
         im[im > 0] = 255
         cv2.imwrite(f"{dir_path}/{image_path}", im)
         print(f"Writing image {image_path}")
-
-
-preprocessing("C:\\Users\\Kare4U\\Downloads\\PageSegExtended\\customdataset_extending_pageseg\\PageSeg")
