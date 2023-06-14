@@ -38,7 +38,7 @@ def batch_generator(dir_path, image_names, batch_size):
 
             mask = cv2.imread(f"{dir_path}/{im_name}_mask.png", cv2.IMREAD_GRAYSCALE)
             mask = cv2.resize(mask, (512, 512))
-            mask /= 255
+            mask = mask / 255
 
             images.append(im)
             masks.append(mask)
