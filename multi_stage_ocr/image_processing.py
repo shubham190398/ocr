@@ -49,6 +49,28 @@ def pad_image(img):
     return img
 
 
+def pad_seg(seg):
+    h, w = seg.shape[0], seg.shape[1]
+
+    if h < 512:
+        pad = np.zeros((512 - h, w))
+        seg = np.concatenate((seg, pad))
+        h = 512
+    else:
+        pad = np.zeros((nearest_10(h) - h, w))
+        seg = np.concatenate((seg, pad))
+        h = nearest_10(h)
+
+    if w < 512:
+        pad = np.zeros((h, 512 - w))
+        seg = np.concatenate((seg, pad), axis=1)
+    else:
+        pad = np.zeros((h, nearest_10(w) - w))
+        seg = np.concatenate((seg, pad), axis=1)
+
+    return seg
+
+
 def batch_generator(dir_path, image_names, batch_size):
     while True:
         images = []
