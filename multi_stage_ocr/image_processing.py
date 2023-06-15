@@ -23,6 +23,32 @@ def preprocessing(dir_path):
         print(f"Writing image {image_path}")
 
 
+def nearest_10(num):
+    return int(np.ceil(num / 10.0)) * 10
+
+
+def pad_image(img):
+    h, w = img.shape[0], img.shape[1]
+
+    if h < 512:
+        pad = np.ones((512 - h, w)) * 255
+        img = np.concatenate((img, pad))
+        h = 512
+    else:
+        pad = np.ones((nearest_10(h) - h, w)) * 255
+        img = np.concatenate((img, pad))
+        h = nearest_10(h)
+
+    if w < 512:
+        pad = np.ones((h, 512 - w)) * 255
+        img = np.concatenate((img, pad), axis=1)
+    else:
+        pad = np.ones((h, nearest_10(w) - w)) * 255
+        img = np.concatenate((img, pad), axis=1)
+
+    return img
+
+
 def batch_generator(dir_path, image_names, batch_size):
     while True:
         images = []
