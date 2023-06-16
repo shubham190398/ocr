@@ -1,7 +1,9 @@
+import os
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 from word_segmentor_model import unet
+from image_processing import pad_image
+import matplotlib.pyplot as plt
 
 
 line_seg_model = unet(pretrained_weights="models/50.h5")
@@ -39,3 +41,30 @@ def line_detection(path):
         coord = coordinates[i]
         line_img = original_img[coord[1]:coord[3], coord[0]:coord[2]].copy()
         cv2.imwrite(f"results/line_images/{count}.jpg", line_img)
+        count += 1
+
+
+def word_detection():
+    image_list = os.listdir("results/line_images")
+    image_list = [file.split(".")[0] for file in image_list]
+    for image_path in image_list:
+        img = cv2.imread(f"results/line_images/{image_path}.jpg", cv2.IMREAD_GRAYSCALE)
+        img = pad_image(img)
+        _, img = cv2.threshold(img, 150, 255, cv2.THRESH_BINARY_INV)
+        img = cv2.resize(img, (512, 512))
+        img = np.expand_dims(img, axis=-1)
+        img = np.expand_dims(img, axis=0)
+
+        pred = word_seg_model.predict(img)
+        pred = np.squeeze(np.squeeze(pred, axis=0), axis=-1)
+        plt.imsave(f"results/word_segs/{image_path}_mask.jpg", pred)
+
+
+def main():
+    path = "dataset/LineSeg/1.JPG"
+    line_detection(path)
+    word_detection()
+
+
+if __name__ == "__main__":
+    main()

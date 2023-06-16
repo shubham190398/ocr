@@ -17,7 +17,7 @@ def batch_segmentor(dir_path, image_names, batch_size):
             im_name = random.choice(image_names)
             im = cv2.imread(f"{dir_path}/lines/{im_name}.jpg", cv2.IMREAD_GRAYSCALE)
             im = pad_image(im)
-            _, img = cv2.threshold(im, 150, 255, cv2.THRESH_BINARY_INV)
+            _, im = cv2.threshold(im, 150, 255, cv2.THRESH_BINARY_INV)
             im = cv2.resize(im, (512, 512))
             im = np.expand_dims(im, axis=-1)
             im = im / 255
