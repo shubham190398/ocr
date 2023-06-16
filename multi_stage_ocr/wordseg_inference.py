@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 
 line_seg_model = unet(pretrained_weights="models/50.h5")
-word_seg_model = unet(pretrained_weights="models/wordseg-35.h5")
+word_seg_model = unet(pretrained_weights="models/wordseg-10.h5")
 
 
 def line_detection(path):
@@ -58,6 +58,26 @@ def word_detection():
         pred = word_seg_model.predict(img)
         pred = np.squeeze(np.squeeze(pred, axis=0), axis=-1)
         plt.imsave(f"results/word_segs/{image_path}_mask.jpg", pred)
+
+        original_img = cv2.imread(f"results/line_images/{image_path}.jpg", cv2.IMREAD_GRAYSCALE)
+        img = cv2.imread(f"results/word_segs/{image_path}_mask.jpg", cv2.IMREAD_GRAYSCALE)
+        cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU, img)
+        original_img = pad_image(original_img)
+        (h, w) = original_img.shape[:2]
+        factor_h, factor_w = h/512.0, w/512.0
+        original_img_copy = np.stack((original_img,)*3, axis=-1)
+
+        contours, hierarchy = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+
+        for c in contours:
+            x, y, w, h = cv2.boundingRect(c)
+            cv2.rectangle(original_img_copy, (int(x*factor_w), int(y*factor_h)),
+                          (int((x+w)*factor_w), int((y+h)*factor_h)),
+                          (255, 0, 0), 1)
+
+        cv2.imwrite(f"results/word_segs/{image_path}_contours.png", original_img_copy)
+
+
 
 
 def main():
