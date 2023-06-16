@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 
 line_seg_model = unet(pretrained_weights="models/50.h5")
-word_seg_model = unet(pretrained_weights="models/wordseg-10.h5")
+word_seg_model = unet(pretrained_weights="models/wordseg-20.h5")
 
 
 def line_detection(path):
@@ -78,10 +78,8 @@ def word_detection():
         cv2.imwrite(f"results/word_segs/{image_path}_contours.png", original_img_copy)
 
 
-
-
 def main():
-    path = "dataset/LineSeg/1.JPG"
+    path = "dataset/LineSeg/348.JPG"
     line_detection(path)
     word_detection()
 
