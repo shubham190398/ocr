@@ -25,8 +25,7 @@ def batch_segmentor(dir_path, image_names, batch_size):
             mask = cv2.imread(f"{dir_path}/masks/{im_name}_mask.png", cv2.IMREAD_GRAYSCALE)
             mask = pad_seg(mask)
             mask = cv2.resize(mask, (512, 512))
-            mask = np.stack((mask, )*3, axis=-1)
-            mask = get_masked_img(mask)
+            mask = mask / 255
 
             images.append(im)
             masks.append(mask)
