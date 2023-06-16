@@ -1,4 +1,3 @@
-import os
 from image_processing import batch_generator
 from line_segmentor_model import unet
 import random
