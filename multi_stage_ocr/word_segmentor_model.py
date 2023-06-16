@@ -5,7 +5,7 @@ from keras.models import Model
 import random
 import cv2
 import numpy as np
-from image_processing import pad_image, pad_seg, nearest_10
+from image_processing import pad_image, pad_seg
 
 
 def batch_segmentor(dir_path, image_names, batch_size):
