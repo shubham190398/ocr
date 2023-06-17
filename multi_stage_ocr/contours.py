@@ -3,7 +3,7 @@ from image_processing import pad_image
 import numpy as np
 
 
-image_path = "9"
+image_path = "12"
 original_img = cv2.imread(f"results/line_images/{image_path}.jpg", cv2.IMREAD_GRAYSCALE)
 img = cv2.imread(f"results/word_segs/{image_path}_mask.jpg", cv2.IMREAD_GRAYSCALE)
 cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU, img)
@@ -30,5 +30,5 @@ for c in contours:
 cv2.imshow("original img", original_img)
 cv2.imshow("contours", img)
 cv2.imshow("bboxes", original_img_copy)
-cv2.imwrite("results/contours_test/9_polylines.png", original_img_copy)
+cv2.imwrite(f"results/contours_test/{image_path}_polylines.png", original_img_copy)
 cv2.waitKey(0)
