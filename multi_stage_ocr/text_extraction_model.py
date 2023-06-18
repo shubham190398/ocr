@@ -50,6 +50,6 @@ def model(input_dim, output_dim, kernel_size=(3, 3), activation="relu", padding=
 
     text_model = Model(inputs=inputs, outputs=output)
 
-    return Model
+    return text_model
 
 
