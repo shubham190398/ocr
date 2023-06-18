@@ -21,12 +21,12 @@ def randomness_decorator(func):
 
 class Augmentor:
     def __init__(self, random_chance: float = 0.5, log_level: int = logging.INFO) -> None:
-        self.random_chance = random_chance
-        self.log_level = log_level
+        self._random_chance = random_chance
+        self._log_level = log_level
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.setLevel(logging.INFO)
 
-        assert 0 <= self.random_chance <= 1.0, "random chance must be between 0.0 and 1.0"
+        assert 0 <= self._random_chance <= 1.0, "random chance must be between 0.0 and 1.0"
 
     @randomness_decorator
     def __call__(self, image: NormalImage, annotation: typing.Any) -> typing.Tuple[NormalImage, typing.Any]:
