@@ -53,3 +53,5 @@ def model(input_dim, output_dim, kernel_size=(3, 3), activation="relu", padding=
     return text_model
 
 
+ocr_model = model((32, 128, 1), 36)
+ocr_model.summary()
