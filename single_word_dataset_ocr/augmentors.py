@@ -119,7 +119,7 @@ class RandomErodeDilate(Augmentor):
 
 
 class RandomGaussianBlur(Augmentor):
-    def __init(
+    def __init__(
             self,
             random_chance: float = 0.5,
             log_level: int = logging.INFO,
