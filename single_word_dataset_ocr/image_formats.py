@@ -61,12 +61,12 @@ class CVImage(NormalImage):
             if not os.path.exists(image):
                 raise FileNotFoundError(f"Image {image} not found.")
 
-            self.image = cv2.imread(image, method)
+            self._image = cv2.imread(image, method)
             self.path = image
             self.color = "BGR"
 
         elif isinstance(image, np.ndarray):
-            self.image = image
+            self._image = image
             self.path = path
             self.color = color
 
@@ -75,25 +75,25 @@ class CVImage(NormalImage):
 
         self.method = method
 
-        if self.image is None:
+        if self._image is None:
             return None
 
         self.init_successful = True
         self.width = self.image.shape[1]
         self.height = self.image.shape[0]
-        self.channels = 1 if len(self.image.shape) == 2 else self.image.shape[2]
+        self.channels = 1 if len(self._image.shape) == 2 else self._image.shape[2]
 
     @property
     def image(self) -> np.ndarray:
-        return self.image
+        return self._image
 
     @image.setter
     def image(self, value: np.ndarray):
-        self.image = value
+        self._image = value
 
     @property
     def shape(self) -> tuple:
-        return self.image.shape
+        return self._image.shape
 
     @property
     def center(self) -> tuple:
@@ -101,26 +101,26 @@ class CVImage(NormalImage):
 
     def RGB(self) -> np.ndarray:
         if self.color == "RGB":
-            return self.image
+            return self._image
         elif self.color == "BGR":
-            return cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
+            return cv2.cvtColor(self._image, cv2.COLOR_BGR2RGB)
         else:
             raise ValueError(f"Unknown color format {self.color}")
 
     def HSV(self) -> np.ndarray:
         if self.color == "BGR":
-            return cv2.cvtColor(self.image, cv2.COLOR_BGR2HSV)
+            return cv2.cvtColor(self._image, cv2.COLOR_BGR2HSV)
         elif self.color == "RGB":
-            return cv2.cvtColor(self.image, cv2.COLOR_RGB2HSV)
+            return cv2.cvtColor(self._image, cv2.COLOR_RGB2HSV)
         else:
             raise ValueError(f"Unknown color format {self.color}")
 
     def update(self, image: np.ndarray):
         if isinstance(image, np.ndarray):
-            self.image = image
-            self.width = self.image.shape[1]
-            self.height = self.image.shape[0]
-            self.channels = 1 if len(self.image.shape) == 2 else self.image.shape[2]
+            self._image = image
+            self.width = self._image.shape[1]
+            self.height = self._image.shape[0]
+            self.channels = 1 if len(self._image.shape) == 2 else self._image.shape[2]
             return self
 
         else:
@@ -129,11 +129,12 @@ class CVImage(NormalImage):
     def flip(self, axis: int = 0):
         if axis not in [0, 1]:
             raise ValueError(f"axis must be either 0 or 1, not {axis}")
-        self.image = self.image[:, ::-1] if axis == 0 else self.image[::-1]
+        self._image = self._image[:, ::-1] if axis == 0 else self._image[::-1]
         return self
 
     def numpy(self) -> np.ndarray:
-        return self.image
+        return self._image
 
     def __call__(self) -> np.ndarray:
-        return self.image
+        return self._image
+
