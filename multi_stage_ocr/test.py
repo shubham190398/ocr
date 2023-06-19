@@ -2,6 +2,7 @@ import os
 import ast
 import cv2
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def preprocess_img(img, imgSize=(128, 32)):
@@ -33,14 +34,17 @@ def create_vocab(path):
             name = file.split(".")[0]
             img = cv2.imread(f"C:\\Users\\Kare4U\\Downloads\\augmented_FUNSD\\augmented_FUNSD\\{name}.png", 0)
             word_dict = ast.literal_eval(f.readlines()[0])
+            c = 1
             for index, coordinates in enumerate(word_dict['bboxes']):
                 x1, y1, x2, y2 = coordinates
                 im = img[y1:y2, x1:x2]
                 im = preprocess_img(im)
-                cv2.imwrite("1.png", im)
-                print(im.shape)
+                plt.imshow(im, cmap='gray')
+                plt.show()
                 print(word_dict['words'][index])
-                break
+                c += 1
+                if c == 5:
+                    break
 
         break
 
