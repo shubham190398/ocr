@@ -14,7 +14,7 @@ def create_vocab(path):
             for word in word_dict['words']:
                 vocab.update(word.lower())
 
-    return sorted(vocab)
+    print(sorted(vocab))
 
 
 create_vocab("C:\\Users\\Kare4U\\Downloads\\augmentations_FUNSD\\augmnted_FUNSD_wordtexts")
