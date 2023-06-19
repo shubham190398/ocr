@@ -50,4 +50,4 @@ def encode_labels(text, vocab):
     return digit_list
 
 
-print("".join(create_vocab("C:\\Users\\Kare4U\\Downloads\\augmented_FUNSD\\augmented_FUNSD_texts")))
+# print("".join(create_vocab("C:\\Users\\Kare4U\\Downloads\\augmented_FUNSD\\augmented_FUNSD_texts")))
