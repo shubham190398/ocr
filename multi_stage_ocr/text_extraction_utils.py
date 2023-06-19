@@ -9,6 +9,7 @@ def create_vocab(path):
     for file in textfiles:
 
         with open(f"{path}/{file}", "r") as f:
+            print(f"Reading file {file}")
             word_dict = ast.literal_eval(f.readlines()[0])
 
             for word in word_dict['words']:
