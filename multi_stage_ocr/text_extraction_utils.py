@@ -38,4 +38,16 @@ def preprocess_img(img, imgSize=(128, 32)):
     return target
 
 
+def encode_labels(text, vocab):
+    digit_list = []
+
+    for index, char in enumerate(text):
+        try:
+            digit_list.append(vocab.index(char.lower()))
+        except:
+            print(f"{char} is not in vocab")
+
+    return digit_list
+
+
 print("".join(create_vocab("C:\\Users\\Kare4U\\Downloads\\augmented_FUNSD\\augmented_FUNSD_texts")))

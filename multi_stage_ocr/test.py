@@ -15,7 +15,11 @@ def preprocess_img(img, imgSize=(128, 32)):
 
     target_size = (max(min(w_target, int(w / f)), 1), max(min(h_target, int(h / f)), 1))
     img = cv2.resize(img, target_size, interpolation=cv2.INTER_CUBIC)
-    return img
+
+    target = np.ones([h_target, w_target]) * 255
+    target[0:target_size[1], 0:target_size[0]] = img
+
+    return target
 
 
 def create_vocab(path):
@@ -33,10 +37,10 @@ def create_vocab(path):
                 x1, y1, x2, y2 = coordinates
                 im = img[y1:y2, x1:x2]
                 im = preprocess_img(im)
-                cv2.imshow("im", im)
+                cv2.imwrite("1.png", im)
                 print(im.shape)
                 print(word_dict['words'][index])
-                cv2.waitKey(0)
+                break
 
         break
 
