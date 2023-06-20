@@ -68,8 +68,8 @@ def train(image_dir, annotation_dir):
     train_input_length, valid_input_length = np.array(train_input_length), np.array(valid_input_length)
     train_label_length, valid_label_length = np.array(train_label_length), np.array(valid_label_length)
 
-    batch_size = 512
-    epochs = 60
+    batch_size = 1024
+    epochs = 100
 
     model.fit(
         x=[train_images, train_padded_annots, train_input_length, train_label_length],
