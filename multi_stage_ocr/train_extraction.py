@@ -44,7 +44,7 @@ def train(image_dir, annotation_dir):
 
                 images.append(img)
                 label_length.append(len(annotation))
-                input_length.append(len(input_length))
+                input_length.append(31)
                 annotations.append(encode_labels(annotation, vocab))
 
     dataset_length = len(images)
