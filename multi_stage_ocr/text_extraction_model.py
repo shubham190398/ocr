@@ -109,5 +109,6 @@ def training_model(input_dim, output_dim, max_len, kernel_size=(3, 3), activatio
     loss_out = layers.Lambda(ctc, output_shape=(1,), name='ctc')([output, labels, input_length, label_length])
 
     model = Model(inputs=[inputs, labels, input_length, label_length], outputs=loss_out)
+    model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer='adam')
 
     return model
