@@ -1,10 +1,10 @@
 import ast
-
 import numpy as np
 import cv2
 from text_extraction_utils import encode_labels, preprocess_img, create_vocab
 import os
 import random
+from keras.utils import pad_sequences
 
 
 def train(image_dir, annotation_dir):
@@ -57,7 +57,8 @@ def train(image_dir, annotation_dir):
     train_label_length, valid_label_length = label_length[:split_length], label_length[split_length:]
     train_annotations, valid_annotations = annotations[:split_length], annotations[split_length:]
 
-
+    train_padded_annots = pad_sequences(train_annotations, maxlen=max_label_length, padding='post', value=len(vocab))
+    valid_padded_annots = pad_sequences(valid_annotations, maxlen=max_label_length, padding='post', value=len(vocab))
 
 
 def main():
