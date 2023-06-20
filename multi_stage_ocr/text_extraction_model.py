@@ -3,7 +3,7 @@ from keras import layers
 from keras.models import Model
 
 
-def model(input_dim, output_dim, kernel_size=(3, 3), activation="relu", padding="same", dropout=0.2):
+def inference_model(input_dim, output_dim, kernel_size=(3, 3), activation="relu", padding="same", dropout=0.2):
     inputs = layers.Input(shape=input_dim, name="input")
 
     conv1 = layers.Conv2D(64, kernel_size=kernel_size, activation=activation, padding=padding)(inputs)
@@ -53,5 +53,5 @@ def model(input_dim, output_dim, kernel_size=(3, 3), activation="relu", padding=
     return text_model
 
 
-ocr_model = model((32, 128, 1), 36)
-ocr_model.summary()
+# ocr_model = inference_model((32, 128, 1), 36)
+# ocr_model.summary()
