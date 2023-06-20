@@ -12,6 +12,10 @@ def train(image_dir, annotation_dir):
     image_names = [file.split(".")[0] for file in image_names]
     images = []
     annotations = []
+    label_length = []
+    original_text = []
+    input_length = []
+
     max_label_length = 0
 
     vocab = create_vocab(annotation_dir)
@@ -31,6 +35,17 @@ def train(image_dir, annotation_dir):
                 img = preprocess_img(img, (128, 32))
                 img = np.expand_dims(img, axis=-1)
                 img = img/255
+
+                annotation = word_dict['words'][index].lower()
+
+                if len(annotation) > max_label_length:
+                    max_label_length = len(annotation)
+
+                images.append(img)
+                original_text.append(annotation)
+                label_length.append(len(annotation))
+                input_length.append(len(input_length))
+                annotations.append(encode_labels(annotation, vocab))
 
 
 

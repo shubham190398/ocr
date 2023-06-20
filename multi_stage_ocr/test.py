@@ -41,7 +41,7 @@ def create_vocab(path):
                 im = preprocess_img(im)
                 plt.imshow(im, cmap='gray')
                 plt.show()
-                print(word_dict['words'][index])
+                print(type(word_dict['words'][index].lower()))
                 c += 1
                 if c == 5:
                     break
