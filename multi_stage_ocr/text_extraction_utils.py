@@ -15,7 +15,7 @@ def create_vocab(path):
             word_dict = ast.literal_eval(f.readlines()[0])
 
             for word in word_dict['words']:
-                vocab.update(word.lower())
+                vocab.update(word)
 
     return sorted(vocab)
 
@@ -43,7 +43,7 @@ def encode_labels(text, vocab):
 
     for index, char in enumerate(text):
         try:
-            digit_list.append(vocab.index(char.lower()))
+            digit_list.append(vocab.index(char))
         except:
             print(f"{char} is not in vocab")
 

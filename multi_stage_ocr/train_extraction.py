@@ -37,7 +37,7 @@ def train(image_dir, annotation_dir):
                 img = np.expand_dims(img, axis=-1)
                 img = img/255
 
-                annotation = word_dict['words'][index].lower()
+                annotation = word_dict['words'][index]
 
                 if len(annotation) > max_label_length:
                     max_label_length = len(annotation)
