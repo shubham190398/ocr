@@ -53,5 +53,6 @@ def inference_model(input_dim, output_dim, kernel_size=(3, 3), activation="relu"
     return text_model
 
 
-# ocr_model = inference_model((32, 128, 1), 36)
-# ocr_model.summary()
+def ctc(args):
+    y_pred, labels, input_length, label_length = args
+    return keras.backend.ctc_batch_cost(labels, y_pred, input_length, label_length)
