@@ -6,6 +6,7 @@ from text_extraction_model import training_model
 import os
 import random
 from keras.utils import pad_sequences
+from keras.callbacks import ModelCheckpoint
 
 
 def train(image_dir, annotation_dir):
@@ -14,7 +15,6 @@ def train(image_dir, annotation_dir):
     images = []
     annotations = []
     label_length = []
-    original_text = []
     input_length = []
 
     max_label_length = 0
@@ -43,7 +43,6 @@ def train(image_dir, annotation_dir):
                     max_label_length = len(annotation)
 
                 images.append(img)
-                original_text.append(annotation)
                 label_length.append(len(annotation))
                 input_length.append(len(input_length))
                 annotations.append(encode_labels(annotation, vocab))
@@ -53,7 +52,6 @@ def train(image_dir, annotation_dir):
 
     split_length = int(0.95*dataset_length)
     train_images, valid_images = images[:split_length], images[split_length:]
-    train_text, valid_text = original_text[:split_length], images[split_length:]
     train_input_length, valid_input_length = input_length[:split_length], input_length[split_length:]
     train_label_length, valid_label_length = label_length[:split_length], label_length[split_length:]
     train_annotations, valid_annotations = annotations[:split_length], annotations[split_length:]
@@ -62,7 +60,27 @@ def train(image_dir, annotation_dir):
     valid_padded_annots = pad_sequences(valid_annotations, maxlen=max_label_length, padding='post', value=len(vocab))
 
     model = training_model(input_dim=(32, 128, 1), output_dim=len(vocab), max_len=max_label_length)
+    output_path = "/content/text_model.hdf5"
+    checkpoint = ModelCheckpoint(filepath=output_path, monitor='val_loss', verbose=1, save_best_only=True, mode='auto')
+    callbacks_list = [checkpoint]
 
+    train_images, valid_images = np.array(train_images), np.array(valid_images)
+    train_input_length, valid_input_length = np.array(train_input_length), np.array(valid_input_length)
+    train_label_length, valid_label_length = np.array(train_label_length), np.array(valid_label_length)
+
+    batch_size = 512
+    epochs = 60
+
+    model.fit(
+        x=[train_images, train_padded_annots, train_input_length, train_label_length],
+        y=np.zeros(len(train_images)),
+        batch_size=batch_size,
+        epochs=epochs,
+        validation_data=([valid_images, valid_padded_annots, valid_input_length, valid_label_length],
+                         [np.zeros(len(valid_images))]),
+        verbose=1,
+        callbacks=callbacks_list
+    )
 
 
 def main():
