@@ -47,7 +47,15 @@ def train(image_dir, annotation_dir):
                 input_length.append(len(input_length))
                 annotations.append(encode_labels(annotation, vocab))
 
+    dataset_length = len(images)
+    print(f"Length of dataset is {dataset_length}")
 
+    split_length = int(0.95*dataset_length)
+    train_images, valid_images = images[:split_length], images[split_length:]
+    train_text, valid_text = original_text[:split_length], images[split_length:]
+    train_input_length, valid_input_length = input_length[:split_length], input_length[split_length:]
+    train_label_length, valid_label_length = label_length[:split_length], label_length[split_length:]
+    train_annotations, valid_annotations = annotations[:split_length], annotations[split_length:]
 
 
 
