@@ -1,9 +1,12 @@
-import os
-import cv2
-import numpy as np
 from word_segmentor_model import unet
 from image_processing import pad_image
 import matplotlib.pyplot as plt
+import os
+from text_extraction_model import inference_model
+from text_extraction_utils import create_vocab, preprocess_img
+import cv2
+import numpy as np
+import keras.backend
 
 
 line_seg_model = unet(pretrained_weights="models/50.h5")
@@ -47,6 +50,7 @@ def line_detection(path):
 def word_detection():
     image_list = os.listdir("results/line_images")
     image_list = [file.split(".")[0] for file in image_list]
+    count = 0
     for image_path in image_list:
         img = cv2.imread(f"results/line_images/{image_path}.jpg", cv2.IMREAD_GRAYSCALE)
         img = pad_image(img)
@@ -57,10 +61,10 @@ def word_detection():
 
         pred = word_seg_model.predict(img)
         pred = np.squeeze(np.squeeze(pred, axis=0), axis=-1)
-        plt.imsave(f"results/word_segs/{image_path}_mask.jpg", pred)
+        plt.imsave(f"results/word_masks/{image_path}_mask.jpg", pred)
 
         original_img = cv2.imread(f"results/line_images/{image_path}.jpg", cv2.IMREAD_GRAYSCALE)
-        img = cv2.imread(f"results/word_segs/{image_path}_mask.jpg", cv2.IMREAD_GRAYSCALE)
+        img = cv2.imread(f"results/word_masks/{image_path}_mask.jpg", cv2.IMREAD_GRAYSCALE)
         cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU, img)
         original_img = pad_image(original_img)
         (h, w) = original_img.shape[:2]
@@ -71,17 +75,48 @@ def word_detection():
 
         for c in contours:
             x, y, w, h = cv2.boundingRect(c)
-            cv2.rectangle(original_img_copy, (int(x*factor_w), int(y*factor_h)),
-                          (int((x+w)*factor_w), int((y+h)*factor_h)),
-                          (255, 0, 0), 1)
+            word = original_img[int(y*factor_h):int((y+h)*factor_h), int(x*factor_w):int((x+w)*factor_w)]
+            cv2.imwrite(f"results/words/{count}.png", original_img_copy)
+            count += 1
 
-        cv2.imwrite(f"results/word_segs/{image_path}_contours.png", original_img_copy)
+        # cv2.imwrite(f"results/word_masks/{image_path}_contours.png", original_img_copy)
 
+
+def text_inference():
+    # vocab = create_vocab("C:\\Users\\Kare4U\\Downloads\\augmented_FUNSD\\augmented_FUNSD_texts")
+    vocab = create_vocab("C:\\Users\\nexus\\PycharmProjects\\OCRDataset\\augementing\\augmented_FUNSD_texts")
+
+    model = inference_model(input_dim=(32, 128, 1), output_dim=len(vocab))
+    model.load_weights("models/text_model.hdf5")
+
+    images = []
+    image_names = os.listdir("results/words")
+    for image in image_names:
+        img = cv2.imread(f"results/words/{image}", cv2.IMREAD_GRAYSCALE)
+        img = preprocess_img(img, (128, 32))
+        img = np.expand_dims(img, axis=-1)
+        img = img / 255
+        images.append(img)
+
+    images = np.array(images)
+
+    prediction = model.predict(images)
+    output = keras.backend.get_value(keras.backend.ctc_decode(
+        prediction, input_length=np.ones(prediction.shape[0]) * prediction.shape[1], greedy=True
+    )[0][0])
+
+    for p in output:
+        text = ""
+        for x in p:
+            if int(x) != -1:
+                text += vocab[int(x)]
+        print(text)
 
 def main():
-    path = "dataset/LineSeg/348.JPG"
+    path = "dataset/testing/1.jpeg"
     line_detection(path)
     word_detection()
+    text_inference()
 
 
 if __name__ == "__main__":
