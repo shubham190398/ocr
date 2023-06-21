@@ -7,7 +7,7 @@ import numpy as np
 def detect():
     model = unet(pretrained_weights="models/50.h5")
     img = cv2.imread("dataset/testing/1.jpeg", cv2.IMREAD_GRAYSCALE)
-    ret, img = cv2.threshold(img, 150, 255, cv2.THRESH_BINARY_INV)
+    ret, img = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY_INV)
     img = cv2.resize(img, (512, 512))
     img = np.expand_dims(img, axis=-1)
     img = np.expand_dims(img, axis=0)
