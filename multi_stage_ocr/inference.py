@@ -38,4 +38,4 @@ def detect_lines(image_path):
         line_img = original_image[coords[1]:coords[3], coords[0]:coords[2]].copy()
         line_images.append(line_img)
 
-    return line_images
+    return line_images, coordinates
