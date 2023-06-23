@@ -6,21 +6,21 @@ import numpy as np
 
 def detect():
     model = unet(pretrained_weights="models/50.h5")
-    img = cv2.imread("dataset/testing/1.jpeg", cv2.IMREAD_GRAYSCALE)
+    img = cv2.imread("dataset/invoices/335.jpg", cv2.IMREAD_GRAYSCALE)
     ret, img = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY_INV)
     img = cv2.resize(img, (512, 512))
     img = np.expand_dims(img, axis=-1)
     img = np.expand_dims(img, axis=0)
     pred = model.predict(img)
     pred = np.squeeze(np.squeeze(pred, axis=0), axis=-1)
-    plt.imsave("results/1_mask.JPG", pred)
+    plt.imsave("results/335_mask.JPG", pred)
 
 
 def main():
     detect()
-    img = cv2.imread("results/1_mask.JPG", cv2.IMREAD_GRAYSCALE)
+    img = cv2.imread("results/335_mask.JPG", cv2.IMREAD_GRAYSCALE)
     cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU, img)
-    original_img = cv2.imread("dataset/testing/1.jpeg")
+    original_img = cv2.imread("dataset/invoices/335.jpg")
     original_img = cv2.resize(original_img, (512, 512))
 
     contours, hierarchy = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
@@ -29,7 +29,7 @@ def main():
         x, y, w, h = cv2.boundingRect(c)
         cv2.rectangle(original_img, (x, y), (x + w, y + h), 255, 1)
 
-    cv2.imwrite("results/1_contours.JPG", original_img)
+    cv2.imwrite("results/335_contours.JPG", original_img)
 
 
 if __name__ == "__main__":

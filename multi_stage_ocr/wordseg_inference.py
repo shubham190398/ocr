@@ -26,6 +26,11 @@ def line_detection(path):
     cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU, img)
 
     original_img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+    # ori = original_img.copy()
+    # ori = cv2.resize(ori, (512, 512))
+    # cv2.imshow("img", img)
+    # cv2.imshow("img original", ori)
+    # cv2.waitKey(0)
 
     (h, w) = original_img.shape[:2]
     re_h, re_w = 512, 512
@@ -76,7 +81,7 @@ def word_detection():
         for c in contours:
             x, y, w, h = cv2.boundingRect(c)
             word = original_img[int(y*factor_h):int((y+h)*factor_h), int(x*factor_w):int((x+w)*factor_w)]
-            cv2.imwrite(f"results/words/{count}.png", original_img_copy)
+            cv2.imwrite(f"results/words/{count}.png", word)
             count += 1
 
         # cv2.imwrite(f"results/word_masks/{image_path}_contours.png", original_img_copy)
@@ -113,7 +118,7 @@ def text_inference():
         print(text)
 
 def main():
-    path = "dataset/testing/1.jpeg"
+    path = "dataset/invoices/335.jpg"
     line_detection(path)
     word_detection()
     text_inference()
