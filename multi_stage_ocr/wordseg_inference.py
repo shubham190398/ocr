@@ -41,7 +41,8 @@ def line_detection(path):
 
     for c in contours:
         x, y, w, h = cv2.boundingRect(c)
-        coordinates.append((int(x * factor_w), int(y * factor_h), int((x + w) * factor_w), int((y + h) * factor_h)))
+        if int(w * factor_w) >= 7 and int(h * factor_h) >= 5:
+            coordinates.append((int(x * factor_w), int(y * factor_h), int((x + w) * factor_w), int((y + h) * factor_h)))
 
     count = 0
 
@@ -94,10 +95,11 @@ def word_detection(path, line_coords):
         for c in contours:
             x, y, w, h = cv2.boundingRect(c)
             # print([x, y, x+w, y+h])
-            word_coordinates.append([int(x*factor_w), int(y*factor_h), int((x+w)*factor_w), int((y+h)*factor_h)])
-            word = original_img[int(y*factor_h):int((y+h)*factor_h), int(x*factor_w):int((x+w)*factor_w)]
-            cv2.imwrite(f"results/words/{count1}_{count}.png", word)
-            count += 1
+            if int(w * factor_w) >= 7 and int(h * factor_h) >= 5:
+                word_coordinates.append([int(x*factor_w), int(y*factor_h), int((x+w)*factor_w), int((y+h)*factor_h)])
+                word = original_img[int(y*factor_h):int((y+h)*factor_h), int(x*factor_w):int((x+w)*factor_w)]
+                cv2.imwrite(f"results/words/{count1}_{count}.png", word)
+                count += 1
 
         count1 += 1
         all_words_coordinates.append(word_coordinates)
@@ -114,7 +116,7 @@ def text_inference(path, line_coords, all_words_coordinates):
     model.load_weights("models/text_model.hdf5")
 
     images = []
-    word_coords = []
+    word_sp = []
     # image_names = os.listdir("results/words")
     # for image in image_names:
     #     img = cv2.imread(f"results/words/{image}", cv2.IMREAD_GRAYSCALE)
@@ -145,7 +147,7 @@ def text_inference(path, line_coords, all_words_coordinates):
             word = np.expand_dims(word, axis=-1)
             word = word / 255
             images.append(word)
-            word_coords.append((line_x1+x1, line_y1+y1))
+            word_sp.append((line_x1+x1, line_y1+y1))
 
     images = np.array(images)
 
@@ -163,16 +165,16 @@ def text_inference(path, line_coords, all_words_coordinates):
             if int(x) != -1:
                 text += vocab[int(x)]
         print(text)
-        cv2.putText(blank, text, word_coords[i], cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 1)
+        cv2.putText(blank, text, word_sp[i], cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 1)
 
     return blank
 
 def main():
-    path = "dataset/invoices/335.jpg"
+    path = "dataset/LineSeg/354.JPG"
     line_coords = line_detection(path)
     all_words_coordinates = word_detection(path, line_coords)
     words_doc = text_inference(path, line_coords, all_words_coordinates)
-    cv2.imwrite("results/doc.png", words_doc)
+    cv2.imwrite("results/doc_354.png", words_doc)
 
 
 
