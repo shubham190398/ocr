@@ -126,6 +126,8 @@ def text_inference(path, line_coords, all_words_coordinates):
     #     images.append(img)
 
     img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+    width = img.shape[1]
+    height = img.shape[0]
 
     assert len(line_coords) == len(all_words_coordinates)
 
@@ -156,7 +158,7 @@ def text_inference(path, line_coords, all_words_coordinates):
         prediction, input_length=np.ones(prediction.shape[0]) * prediction.shape[1], greedy=True
     )[0][0])
 
-    blank = np.zeros_like(img)
+    blank = np.zeros((3*height, 3*width))
     blank = 255-blank
 
     for i, p in enumerate(output):
@@ -165,7 +167,7 @@ def text_inference(path, line_coords, all_words_coordinates):
             if int(x) != -1:
                 text += vocab[int(x)]
         print(text)
-        cv2.putText(blank, text, word_sp[i], cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 1)
+        cv2.putText(blank, text, 3*np.array(word_sp[i]), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 1)
 
     return blank
 
