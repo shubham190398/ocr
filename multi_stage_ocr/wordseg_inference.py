@@ -132,6 +132,7 @@ def text_inference(path, line_coords, all_words_coordinates):
     assert len(line_coords) == len(all_words_coordinates)
 
     for i, line in enumerate(all_words_coordinates):
+        line_word_sp = []
         for word_coords in line:
             print(word_coords)
             x1, y1, x2, y2 = word_coords
@@ -143,13 +144,15 @@ def text_inference(path, line_coords, all_words_coordinates):
             # if not img.shape[1] >= line_x1+x2:
             #     print(f"{img.shape[1]}         {line_x1}      {x2}")
             word = img[line_y1+y1:line_y1+y2, line_x1+x1:line_x1+x2]
-            # cv2.imshow("word", word)
-            # cv2.waitKey(0)
+            cv2.imshow("word", word)
+            cv2.waitKey(0)
             word = preprocess_img(word, (128, 32))
             word = np.expand_dims(word, axis=-1)
             word = word / 255
             images.append(word)
-            word_sp.append((line_x1+x1, line_y1+y1))
+            line_word_sp.append((line_x1+x1, line_y1+y1))
+
+        word_sp.append(line_word_sp)
 
     images = np.array(images)
 
@@ -161,13 +164,28 @@ def text_inference(path, line_coords, all_words_coordinates):
     blank = np.zeros((3*height, 3*width))
     blank = 255-blank
 
+    text_list = []
+
     for i, p in enumerate(output):
         text = ""
         for x in p:
             if int(x) != -1:
                 text += vocab[int(x)]
         print(text)
-        cv2.putText(blank, text, 3*np.array(word_sp[i]), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 1)
+        # cv2.putText(blank, text, 3*np.array(word_sp[i]), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 1)
+        text_list.append(str(i) + text)
+
+    count = 0
+    line_text_list = []
+    for l in word_sp:
+        line_text = ''
+        for w in l:
+            line_text += text_list[count] + ' '
+            count += 1
+        line_text_list.append(line_text)
+
+    for i, l in enumerate(line_coords):
+        cv2.putText(blank, line_text_list[i], 3*np.array((l[0], l[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 1)
 
     return blank
 
