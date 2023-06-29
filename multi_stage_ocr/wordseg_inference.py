@@ -11,9 +11,14 @@ import keras.backend
 
 line_seg_model = unet(pretrained_weights="models/50.h5")
 word_seg_model = unet(pretrained_weights="models/wordseg-20.h5")
+# vocab = create_vocab("C:\\Users\\Kare4U\\Downloads\\augmented_FUNSD\\augmented_FUNSD_texts")
+vocab = create_vocab("C:\\Users\\nexus\\PycharmProjects\\OCRDataset\\augementing\\augmented_FUNSD_texts")
+
+trans_model = inference_model(input_dim=(32, 128, 1), output_dim=len(vocab))
+trans_model.load_weights("models/text_model.hdf5")
 
 
-def line_detection(path):
+def line_detection(path, img_name):
     img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
     _, img = cv2.threshold(img, 150, 255, cv2.THRESH_BINARY_INV)
     img = cv2.resize(img, (512, 512))
@@ -49,13 +54,13 @@ def line_detection(path):
     for i in range(len(coordinates)):
         coord = coordinates[i]
         line_img = original_img[coord[1]:coord[3], coord[0]:coord[2]].copy()
-        cv2.imwrite(f"results/line_images/{count}.jpg", line_img)
+        cv2.imwrite(f"results/line_images/{img_name}_{count}.jpg", line_img)
         count += 1
 
     return coordinates
 
 
-def word_detection(path, line_coords):
+def word_detection(path, line_coords, img_name):
     # image_list = os.listdir("results/line_images")
     # image_list = [file.split(".")[0] for file in image_list]
     img = cv2.imread(path)
@@ -77,10 +82,10 @@ def word_detection(path, line_coords):
 
         pred = word_seg_model.predict(img)
         pred = np.squeeze(np.squeeze(pred, axis=0), axis=-1)
-        plt.imsave(f"results/word_masks/{count1}_mask.jpg", pred)
+        plt.imsave(f"results/word_masks/{img_name}_{count1}_mask.jpg", pred)
 
         original_img = image.copy()
-        img = cv2.imread(f"results/word_masks/{count1}_mask.jpg", cv2.IMREAD_GRAYSCALE)
+        img = cv2.imread(f"results/word_masks/{img_name}_{count1}_mask.jpg", cv2.IMREAD_GRAYSCALE)
         cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU, img)
         original_img = pad_image(original_img)
         (h, w) = original_img.shape[:2]
@@ -98,7 +103,7 @@ def word_detection(path, line_coords):
             if int(w * factor_w) >= 7 and int(h * factor_h) >= 5:
                 word_coordinates.append([int(x*factor_w), int(y*factor_h), int((x+w)*factor_w), int((y+h)*factor_h)])
                 word = original_img[int(y*factor_h):int((y+h)*factor_h), int(x*factor_w):int((x+w)*factor_w)]
-                cv2.imwrite(f"results/words/{count1}_{count}.png", word)
+                cv2.imwrite(f"results/words/{img_name}_{count1}_{count}.png", word)
                 count += 1
 
         count1 += 1
@@ -109,12 +114,6 @@ def word_detection(path, line_coords):
 
 
 def text_inference(path, line_coords, all_words_coordinates):
-    # vocab = create_vocab("C:\\Users\\Kare4U\\Downloads\\augmented_FUNSD\\augmented_FUNSD_texts")
-    vocab = create_vocab("C:\\Users\\nexus\\PycharmProjects\\OCRDataset\\augementing\\augmented_FUNSD_texts")
-
-    model = inference_model(input_dim=(32, 128, 1), output_dim=len(vocab))
-    model.load_weights("models/text_model.hdf5")
-
     images = []
     word_sp = []
     # image_names = os.listdir("results/words")
@@ -157,7 +156,7 @@ def text_inference(path, line_coords, all_words_coordinates):
 
     images = np.array(images)
 
-    prediction = model.predict(images)
+    prediction = trans_model.predict(images)
     output = keras.backend.get_value(keras.backend.ctc_decode(
         prediction, input_length=np.ones(prediction.shape[0]) * prediction.shape[1], greedy=True
     )[0][0])
@@ -191,11 +190,14 @@ def text_inference(path, line_coords, all_words_coordinates):
     return blank
 
 def main():
-    path = "dataset/LineSeg/354.JPG"
-    line_coords = line_detection(path)
-    all_words_coordinates = word_detection(path, line_coords)
-    words_doc = text_inference(path, line_coords, all_words_coordinates)
-    cv2.imwrite("results/doc_354.png", words_doc)
+    dir = os.listdir("dataset/forms")
+    for file in dir:
+        path = "dataset/forms/" + file
+        img_name, _ = file.split(".")
+        line_coords = line_detection(path, img_name)
+        all_words_coordinates = word_detection(path, line_coords, img_name)
+        words_doc = text_inference(path, line_coords, all_words_coordinates)
+        cv2.imwrite(f"results/docs/doc_{img_name}.png", words_doc)
 
 
 
