@@ -1,4 +1,6 @@
 import copy
+import os
+
 import numpy as np
 import cv2
 from word_segmentor_model import unet
@@ -6,8 +8,8 @@ from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 from PIL import Image
 
 
-def detect_lines(image_path):
-    model = unet(pretrained_weights="models/50.h5")
+def detect_lines(image_path, img_name):
+    model = unet(pretrained_weights="models/text_seg_model.h5")
     img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
     original_height, original_width = img.shape[:2]
     original_image = copy.deepcopy(img)
@@ -33,16 +35,18 @@ def detect_lines(image_path):
                             int((y + h) * height_factor)))
 
     line_images = []
-
+    count = 0
     for i in range(len(coordinates)):
         coords = coordinates[i]
         line_img = original_image[coords[1]:coords[3], coords[0]:coords[2]].copy()
+        cv2.imwrite(f'results/demo_lines/{img_name}_{count}.png', line_img)
+        count += 1
         line_images.append(line_img)
 
     return line_images, coordinates
 
 
-def text_detector(image):
+def text_detector(image, image_name):
     processor = TrOCRProcessor.from_pretrained("microsoft/trocr-base-printed")
     model = VisionEncoderDecoderModel.from_pretrained("microsoft/trocr-base-printed")
     pixel_values = processor(image, return_tensors="pt").pixel_values
@@ -50,10 +54,21 @@ def text_detector(image):
     generated_text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
     print(generated_text)
 
+    f = open(f'results/demo_text/{image_name}.txt', 'a')
+    f.write(generated_text + "\n")
+    f.close()
+
 
 def main():
-    image = Image.open("results/line_images/82250337_0338_24.jpg").convert("RGB")
-    text_detector(image)
+    # path = 'dataset/demo_imgs/'
+    # img_name = ''
+    direc = os.listdir("dataset/demo_imgs")
+    for file in direc:
+        path = 'dataset/demo_imgs/' + file
+        img_name, _ = file.split(".")
+        lines, _ = detect_lines(path, img_name)
+        for line in lines:
+            text_detector(cv2.cvtColor(line, cv2.COLOR_GRAY2BGR), img_name)
 
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ import numpy as np
 import keras.backend
 
 
-line_seg_model = unet(pretrained_weights="models/50.h5")
+line_seg_model = unet(pretrained_weights="models/text_seg_model.h5")
 word_seg_model = unet(pretrained_weights="models/wordseg-20.h5")
 # vocab = create_vocab("C:\\Users\\Kare4U\\Downloads\\augmented_FUNSD\\augmented_FUNSD_texts")
 vocab = create_vocab("C:\\Users\\nexus\\PycharmProjects\\OCRDataset\\augementing\\augmented_FUNSD_texts")
@@ -190,14 +190,22 @@ def text_inference(path, line_coords, all_words_coordinates):
     return blank
 
 def main():
-    dir = os.listdir("dataset/forms")
-    for file in dir:
-        path = "dataset/forms/" + file
-        img_name, _ = file.split(".")
-        line_coords = line_detection(path, img_name)
-        all_words_coordinates = word_detection(path, line_coords, img_name)
-        words_doc = text_inference(path, line_coords, all_words_coordinates)
-        cv2.imwrite(f"results/docs/doc_{img_name}.png", words_doc)
+    # dir = os.listdir("dataset/forms")
+    # for file in dir:
+    #     path = "dataset/forms/" + file
+    #     img_name, _ = file.split(".")
+    #     line_coords = line_detection(path, img_name)
+    #     all_words_coordinates = word_detection(path, line_coords, img_name)
+    #     words_doc = text_inference(path, line_coords, all_words_coordinates)
+    #     cv2.imwrite(f"results/docs/doc_{img_name}.png", words_doc)
+
+    file = "82253058_3059.png"
+    path = "dataset/rated_forms/good/" + file
+    img_name, _ = file.split(".")
+    line_coords = line_detection(path, img_name)
+    all_words_coordinates = word_detection(path, line_coords, img_name)
+    words_doc = text_inference(path, line_coords, all_words_coordinates)
+    cv2.imwrite(f"results/docs/doc_{img_name}.png", words_doc)
 
 
 
