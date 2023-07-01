@@ -31,8 +31,9 @@ def detect_lines(image_path, img_name):
 
     for c in contours:
         x, y, w, h = cv2.boundingRect(c)
-        coordinates.append((int(x * width_factor), int(y * height_factor), int((x + w) * width_factor),
-                            int((y + h) * height_factor)))
+        if int(w * width_factor) >= 7 and int(h * height_factor) >= 5:
+            coordinates.append((int(x * width_factor), int(y * height_factor), int((x + w) * width_factor),
+                                int((y + h) * height_factor)))
 
     line_images = []
     count = 0
