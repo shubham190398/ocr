@@ -2,7 +2,7 @@ import copy
 import numpy as np
 import cv2
 from word_segmentor_model import unet
-from text_extraction_model import inference_model
+from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 
 
 def detect_lines(image_path):
@@ -39,3 +39,21 @@ def detect_lines(image_path):
         line_images.append(line_img)
 
     return line_images, coordinates
+
+
+def text_detector(image):
+    processor = TrOCRProcessor.from_pretrained("microsoft/trocr-large-printed")
+    model = VisionEncoderDecoderModel.from_pretrained("microsoft/trocr-large-printed")
+    pixel_values = processor(image, return_tensor="pt").pixel_values
+    generated_ids = model.generate(pixel_values)
+    generated_text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+    print(generated_text)
+
+
+def main():
+    image = cv2.imread("results/line_images/82250337_0338_24.jpg", cv2.IMREAD_GRAYSCALE)
+    text_detector(image)
+
+
+if __name__ == "__main__":
+    main()
