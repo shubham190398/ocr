@@ -6,6 +6,7 @@ import cv2
 from word_segmentor_model import unet
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 from PIL import Image
+from sympy import Line2D, Point2D
 
 
 def detect_lines(img, img_name):
@@ -47,17 +48,14 @@ def detect_lines(img, img_name):
     return line_images, coordinates
 
 
-def text_detector(image, image_name):
+def text_detector(image):
     processor = TrOCRProcessor.from_pretrained("microsoft/trocr-base-printed")
     model = VisionEncoderDecoderModel.from_pretrained("microsoft/trocr-base-printed")
     pixel_values = processor(image, return_tensors="pt").pixel_values
     generated_ids = model.generate(pixel_values)
     generated_text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
     print(generated_text)
-
-    # f = open(f'results/demo_text/{image_name}.txt', 'a')
-    # f.write(generated_text + "\n")
-    # f.close()
+    return generated_text
 
 
 def main():
@@ -72,22 +70,38 @@ def main():
         if dic[file] == "cheque":
             img = cv2.imread(path)
             img1 = img[:int((2 * img.shape[0]) / 10), int((8 * img.shape[1]) / 10):]
-            img2 = img[int((8 * img.shape[0]) / 10):]
-            # lines1, _ = detect_lines(img1, img_name)
-            # lines2, _ = detect_lines(img2, img_name)
-            # for line in lines1:
-            #     text_detector(cv2.cvtColor(line, cv2.COLOR_GRAY2BGR), img_name)
-            # print("----------")
-            # for line in lines2:
-            #     text_detector(cv2.cvtColor(line, cv2.COLOR_GRAY2BGR), img_name)
-            text_detector(img1, img_name)
-            # text_detector(img2, img_name)
-            cv2.imshow('cheque', img1)
-            cv2.waitKey(0)
+            s = text_detector(img1)
+            f = open(f'results/client_text/{img_name}.txt', 'a')
+            f.write(s)
+            f.close()
 
-        # lines, _ = detect_lines(path, img_name)
-        # for line in lines:
-        #     text_detector(cv2.cvtColor(line, cv2.COLOR_GRAY2BGR), img_name)
+        elif dic[file] == "invoice":
+            img = cv2.imread(path)
+            imgs, coords = detect_lines(img, img_name)
+            exhaust_coords = coords.copy()
+            f = open(f'results/client_text/{img_name}.txt', 'a')
+            for coord in coords:
+                if coord in exhaust_coords:
+                    x1, y1, x2, y2 = coord
+                    p1 = Point2D(x1, y1)
+                    p2 = Point2D(x2, y1)
+                    line = Line2D(p1, p2)
+                    removal = []
+                    for line_img, coord2 in zip(imgs, exhaust_coords):
+                        if line.distance(Point2D(coord2[0], coord2[1])) <= 5:
+                            removal.append((line_img, coord2))
+                            s = text_detector(cv2.cvtColor(line_img, cv2.COLOR_GRAY2BGR))
+                            f.write(s + ", ")
+                    for item in removal:
+                        imgs.remove(item[0])
+                        exhaust_coords.remove(item[1])
+                    f.write("\n")
+            f.close()
+
+
+
+
+
 
 
 if __name__ == "__main__":
