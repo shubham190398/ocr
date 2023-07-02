@@ -70,16 +70,18 @@ def main():
         if dic[file] == "cheque":
             img = cv2.imread(path)
             img1 = img[:int((2 * img.shape[0]) / 10), int((8 * img.shape[1]) / 10):]
-            s = text_detector(img1)
-            f = open(f'results/client_text/{img_name}.txt', 'a')
-            f.write(s)
+            # img2 = img[int((8 * img.shape[0]) / 10):]
+            s1 = text_detector(img1)
+            # s2 = text_detector(img2)
+            f = open(f'results/client_text/{img_name}.txt', 'w')
+            f.write(s1 + "\n")
             f.close()
 
         elif dic[file] == "invoice":
             img = cv2.imread(path)
             imgs, coords = detect_lines(img, img_name)
             exhaust_coords = coords.copy()
-            f = open(f'results/client_text/{img_name}.txt', 'a')
+            f = open(f'results/client_text/{img_name}.txt', 'w')
             for coord in coords:
                 if coord in exhaust_coords:
                     x1, y1, x2, y2 = coord
