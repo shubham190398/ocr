@@ -63,9 +63,9 @@ def text_detector(image, image_name):
 def main():
     # path = 'dataset/demo_imgs/'
     # img_name = ''
-    direc = os.listdir("dataset/demo_imgs")
+    direc = os.listdir("dataset/demo_imgs2")
     for file in direc:
-        path = 'dataset/demo_imgs/' + file
+        path = 'dataset/demo_imgs2/' + file
         img_name, _ = file.split(".")
         lines, _ = detect_lines(path, img_name)
         for line in lines:
