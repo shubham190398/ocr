@@ -17,7 +17,7 @@ def detect_lines(image_path, img_name):
     ret, img = cv2.threshold(img, 150, 255, cv2.THRESH_BINARY_INV)
     img = cv2.resize(img, (512, 512))
     img = np.expand_dims(img, axis=-1)
-    img = np.expand_dims(img, axis=0)
+    img = np.expand_dims(img, axis=0)/
     predictions = model.predict(img)
     predictions = np.squeeze(np.squeeze(predictions, axis=0), axis=-1)
 
