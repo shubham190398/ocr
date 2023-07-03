@@ -1,11 +1,8 @@
 import copy
-import os
-import json
 import numpy as np
 import cv2
 from word_segmentor_model import unet
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
-from PIL import Image
 from sympy import Line2D, Point2D
 
 
@@ -58,51 +55,58 @@ def text_detector(image):
     return generated_text
 
 
-def main():
+def main2(path, img_name, type_of_img):
     # path = 'dataset/demo_imgs/'
     # img_name = ''
-    f = open('dataset/clientdata/classification.txt')
-    dic = json.load(f)
-    print(list(dic.keys()))
-    for file in list(dic.keys()):
-        path = 'dataset/clientdata/' + file
-        img_name, _ = file.split(".")
-        if dic[file] == "cheque":
-            img = cv2.imread(path)
-            img1 = img[:int((2 * img.shape[0]) / 10), int((8 * img.shape[1]) / 10):]
-            # img2 = img[int((8 * img.shape[0]) / 10):]
-            s1 = text_detector(img1)
-            # s2 = text_detector(img2)
-            f = open(f'results/client_text/{img_name}.txt', 'w')
-            f.write(s1 + "\n")
-            f.close()
+    # f = open('dataset/clientdata/classification.txt')
+    # dic = json.load(f)
+    # print(list(dic.keys()))
+    # for file in list(dic.keys()):
+    #     path = 'dataset/clientdata/' + file
+    #     img_name, _ = file.split(".")
+    if type_of_img == "cheque":
+        img = cv2.imread(path)
+        img1 = img[:int((2 * img.shape[0]) / 10), int((8 * img.shape[1]) / 10):]
+        # img2 = img[int((8 * img.shape[0]) / 10):]
+        s1 = text_detector(img1)
+        # s2 = text_detector(img2)
+        f = open(f'results/client_text/{img_name}.txt', 'w')
+        f.write(s1 + "\n")
+        f.close()
 
-        elif dic[file] == "invoice":
-            img = cv2.imread(path)
-            imgs, coords = detect_lines(img, img_name)
-            exhaust_coords = coords.copy()
-            f = open(f'results/client_text/{img_name}.txt', 'w')
-            for coord in coords:
-                if coord in exhaust_coords:
-                    x1, y1, x2, y2 = coord
-                    p1 = Point2D(x1, y1)
-                    p2 = Point2D(x2, y1)
-                    line = Line2D(p1, p2)
-                    removal = []
-                    for line_img, coord2 in zip(imgs, exhaust_coords):
-                        if line.distance(Point2D(coord2[0], coord2[1])) <= 5:
-                            removal.append((line_img, coord2))
-                            s = text_detector(cv2.cvtColor(line_img, cv2.COLOR_GRAY2BGR))
-                            f.write(s + ", ")
-                    for item in removal:
-                        imgs.remove(item[0])
-                        exhaust_coords.remove(item[1])
-                    f.write("\n")
-            f.close()
+    elif type_of_img == "invoice":
+        img = cv2.imread(path)
+        imgs, coords = detect_lines(img, img_name)
+        exhaust_coords = coords.copy()
+        f = open(f'results/client_text/{img_name}.txt', 'w')
+        for coord in coords:
+            if coord in exhaust_coords:
+                x1, y1, x2, y2 = coord
+                p1 = Point2D(x1, y1)
+                p2 = Point2D(x2, y1)
+                line = Line2D(p1, p2)
+                removal = []
+                for line_img, coord2 in zip(imgs, exhaust_coords):
+                    if line.distance(Point2D(coord2[0], coord2[1])) <= 5:
+                        removal.append((line_img, coord2))
+                        s = text_detector(cv2.cvtColor(line_img, cv2.COLOR_GRAY2BGR))
+                        f.write(s + ", ")
+                for item in removal:
+                    imgs.remove(item[0])
+                    exhaust_coords.remove(item[1])
+                f.write("\n")
+        f.close()
+
+    else:
+        print("Please ensure type of img is either 'cheque' or 'invoice'")
 
 
 
-
+def main():
+    path = "dataset/clientdata/41.png"      # Path to image goes here
+    img_name = (path.split('/')[-1]).split('.')[0]
+    type_of_img = "cheque"                  # Type of img. Make sure this is only either "cheque" or "invoice"
+    main2(path, img_name, type_of_img)
 
 
 
