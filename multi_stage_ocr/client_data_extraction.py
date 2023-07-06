@@ -101,13 +101,11 @@ def main2(path, img_name, type_of_img):
         print("Please ensure type of img is either 'cheque' or 'invoice'")
 
 
-
 def main():
     path = "dataset/clientdata/41.png"      # Path to image goes here
     img_name = (path.split('/')[-1]).split('.')[0]
     type_of_img = "cheque"                  # Type of img. Make sure this is only either "cheque" or "invoice"
     main2(path, img_name, type_of_img)
-
 
 
 if __name__ == "__main__":
