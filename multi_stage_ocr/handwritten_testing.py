@@ -29,7 +29,7 @@ def trocr_large_handwritten(image):
     return generated_text
 
 def dunnbc22_trocr_base_handwritten(image):
-    processor = TrOCRProcessor.from_pretrained("DunnBC22/trocr-base-handwritten-OCR-handwriting_recognition_v2")
+    processor = TrOCRProcessor.from_pretrained("microsoft/trocr-large-handwritten")
     model = VisionEncoderDecoderModel.from_pretrained("DunnBC22/trocr-base-handwritten-OCR-handwriting_recognition_v2")
     pixel_values = processor(image, return_tensors="pt").pixel_values
     generated_ids = model.generate(pixel_values)
@@ -38,7 +38,7 @@ def dunnbc22_trocr_base_handwritten(image):
     return generated_text
 
 def thivy_trocr_large_handwritten(image):
-    processor = TrOCRProcessor.from_pretrained("thivy/num-trocr-large-handwritten-v1")
+    processor = TrOCRProcessor.from_pretrained("microsoft/trocr-large-handwritten")
     model = VisionEncoderDecoderModel.from_pretrained("thivy/num-trocr-large-handwritten-v1")
     pixel_values = processor(image, return_tensors="pt").pixel_values
     generated_ids = model.generate(pixel_values)
