@@ -57,7 +57,7 @@ thivy = open('results/handwritten_results/thivy_trocr_large_handwritten.txt', 'a
 
 for file in dir:
     path = 'dataset/handwritten_cheques/' + file
-    if file.split('.')[0] in ['2', '2a']:
+    if file.split('.')[0] in ['1', '1a', '1b', '1c', '2', '2a']:
         img = cv2.imread(path)
         base_p.write(f'{file}, {trocr_base_printed(img)}\n')
         base_h.write(f'{file}, {trocr_base_handwritten(img)}\n')

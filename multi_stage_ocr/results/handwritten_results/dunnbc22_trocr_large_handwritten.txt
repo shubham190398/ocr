@@ -38,3 +38,9 @@
 306a.jpg, MOHADE
 306b.jpg, EMPTY
 306c.jpg, EMPTY
+1.png, EMPTY
+1a.png, EMPTY
+1b.png, EMPTY
+1c.png, CLUCY
+2.png, EMPTY
+2a.png, EMPTY
