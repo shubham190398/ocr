@@ -49,20 +49,21 @@ def thivy_trocr_large_handwritten(image):
 
 dir = os.listdir('dataset/handwritten_cheques')
 
-base_p = open('results/handwritten_results/trocr_base_printed.txt', 'w')
-base_h = open('results/handwritten_results/trocr_base_handwritten.txt', 'w')
-large_h = open('results/handwritten_results/trocr_large_handwritten.txt', 'w')
-dunnbc22 = open('results/handwritten_results/dunnbc22_trocr_large_handwritten.txt', 'w')
-thivy = open('results/handwritten_results/thivy_trocr_large_handwritten.txt', 'w')
+base_p = open('results/handwritten_results/trocr_base_printed.txt', 'a')
+base_h = open('results/handwritten_results/trocr_base_handwritten.txt', 'a')
+large_h = open('results/handwritten_results/trocr_large_handwritten.txt', 'a')
+dunnbc22 = open('results/handwritten_results/dunnbc22_trocr_large_handwritten.txt', 'a')
+thivy = open('results/handwritten_results/thivy_trocr_large_handwritten.txt', 'a')
 
 for file in dir:
     path = 'dataset/handwritten_cheques/' + file
-    img = cv2.imread(path)
-    base_p.write(f'{file}, {trocr_base_printed(img)}\n')
-    base_h.write(f'{file}, {trocr_base_handwritten(img)}\n')
-    large_h.write(f'{file}, {trocr_large_handwritten(img)}\n')
-    dunnbc22.write(f'{file}, {dunnbc22_trocr_base_handwritten(img)}\n')
-    thivy.write(f'{file}, {thivy_trocr_large_handwritten(img)}\n')
+    if file.split('.')[0] in ['2', '2a']:
+        img = cv2.imread(path)
+        base_p.write(f'{file}, {trocr_base_printed(img)}\n')
+        base_h.write(f'{file}, {trocr_base_handwritten(img)}\n')
+        large_h.write(f'{file}, {trocr_large_handwritten(img)}\n')
+        dunnbc22.write(f'{file}, {dunnbc22_trocr_base_handwritten(img)}\n')
+        thivy.write(f'{file}, {thivy_trocr_large_handwritten(img)}\n')
 
 base_p.close()
 base_h.close()
