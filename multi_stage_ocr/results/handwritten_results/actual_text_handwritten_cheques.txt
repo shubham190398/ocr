@@ -38,3 +38,10 @@
 306a.jpg, John Doe or order
 306b.jpg, one hundred thirty six 58/00
 306c.jpg, 14 June O5 Date
+1.png, Mary Johnson
+1a.png, Seven hundred fifteen and 59/100
+1b.png, Monthly rent
+1c.png, Aug. 11, 2019
+2.png, Mr. Michael Troy
+2a.png, Ronald Reagan
+
