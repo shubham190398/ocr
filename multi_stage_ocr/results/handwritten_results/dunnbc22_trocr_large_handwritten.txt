@@ -24,3 +24,17 @@
 68.jpg, HUMDRED
 68a.jpg, MATHAD TARI
 68b.jpg, EMPTY
+300.jpg, KARALERLY
+300a.jpg, ZRAVKOV
+300b.jpg, EMPTY
+301.jpg, EMPTY
+301a.jpg, EMPTY
+302.jpg, EMPTY
+302a.jpg, EMPTY
+302b.jpg, EMPTY
+302c.jpg, EMPTY
+302d.jpg, EMPTY
+306.jpg, EMPTY
+306a.jpg, MOHADE
+306b.jpg, EMPTY
+306c.jpg, EMPTY
