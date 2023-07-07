@@ -10,9 +10,3 @@
 260.png, EMPTY
 260a.png, EMPTY
 350.png, EMPTY
-1.png, EMPTY
-1a.png, EMPTY
-1b.png, EMPTY
-1c.png, CLUCY
-2.png, EMPTY
-2a.png, EMPTY
