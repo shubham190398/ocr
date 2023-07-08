@@ -2,6 +2,7 @@ import os
 import cv2
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 
+
 def text_detector(image):
     processor = TrOCRProcessor.from_pretrained("microsoft/trocr-large-printed")
     model = VisionEncoderDecoderModel.from_pretrained("Apocalypse-19/trocr-MICR")
@@ -11,11 +12,13 @@ def text_detector(image):
     print(generated_text)
     return generated_text
 
-dir = os.listdir('dataset/micr')
-f = open('results/micr.txt', 'w')
+
+dir = os.listdir('dataset/live_testing')
+f = open('results/live_testing.txt', 'w')
+
 
 for file in dir:
-    img = cv2.imread('dataset/micr/'+file)
+    img = cv2.imread('dataset/live_testing/'+file)
     text = text_detector(img)
     f.write(f'{file}, {text}\n')
 
