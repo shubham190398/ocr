@@ -17,6 +17,6 @@ f = open('results/micr.txt', 'w')
 for file in dir:
     img = cv2.imread('dataset/micr/'+file)
     text = text_detector(img)
-    f.write(f'{file}, {text}')
+    f.write(f'{file}, {text}\n')
 
 f.close()
