@@ -3,7 +3,7 @@ import os
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 
 
-direc = os.listdir("dataset/manual_crops2")
+direc = os.listdir("dataset/manual_crops2/a")
 
 def text_detector(image):
     processor = TrOCRProcessor.from_pretrained("microsoft/trocr-base-printed")
@@ -25,12 +25,12 @@ for file in direc:
     end = (end_ind == "e")
     f = open(f"results/manual_crops_text/{doc_num}.txt", "a")
     if "invoice" in doc_num and not end:
-        img = cv2.imread(f"dataset/manual_crops2/{file}")
+        img = cv2.imread(f"dataset/manual_crops2/a/{file}")
         s = text_detector(img)
         f.write(s + ", ")
         f.close()
     else:
-        img = cv2.imread(f"dataset/manual_crops2/{file}")
+        img = cv2.imread(f"dataset/manual_crops2/a/{file}")
         s = text_detector(img)
         f.write(s + "\n")
         f.close()
