@@ -63,24 +63,24 @@ def main():
             'data': 'handwritten'
         },
         'f': {
-            'name': [274, 548, 811, 609],
-            'amount': [1739, 481, 2104, 537],
-            'micr': [234, 842, 2176, 922],
-            'date': [1766, 200, 2125, 268],
+            'name': [281, 600, 832, 670],
+            'amount': [1800, 545, 2090, 590],
+            'micr': [345, 919, 2234, 1005],
+            'date': [1840, 237, 2170, 294],
             'data': 'printed'
         },
         'g': {
-            'name': [287, 366, 849, 433],
-            'amount': [1909, 415, 2149, 462],
-            'micr': [382, 830, 1754, 900],
-            'date': [1499, 415, 1749, 465],
+            'name': [320, 420, 645, 461],
+            'amount': [1960, 463, 2199, 510],
+            'micr': [500, 920, 1720, 985],
+            'date': [1540, 460, 1803, 510],
             'data': 'printed'
         },
         'i': {
-            'name': [405, 633, 779, 688],
-            'amount': [1737, 331, 2129, 410],
-            'micr': [248, 872, 1532, 948],
-            'date': [1722, 205, 1931, 245],
+            'name': [400, 665, 791, 721],
+            'amount': [1823, 363, 2107, 428],
+            'micr': [265, 927, 1590, 990],
+            'date': [1765, 215, 1950, 255],
             'data': 'printed'
         },
         'icici': {
@@ -91,10 +91,10 @@ def main():
             'data': 'handwritten'
         },
         'j': {
-            'name': [151, 527, 1175, 586],
-            'amount': [1446, 369, 1711, 417],
-            'micr': [486, 774, 1744, 822],
-            'date': [849, 110, 1366, 162],
+            'name': [155, 624, 1206, 694],
+            'amount': [1484, 450, 1756, 494],
+            'micr': [500, 917, 1790, 974],
+            'date': [871, 130, 1382, 192],
             'data': 'printed'
         },
         'k': {
@@ -116,7 +116,7 @@ def main():
 # CONVERT VALUES TO PERCENTAGE OF WIDTH AND HEIGHT AT THE END
     for file in dir:
         print(file)
-        if file == 'canara': #not in ['uncategorised', 'hbl_ignore', 'a_ignore', 'b_ignore', 'd_ignore', 'e_ignore', 'h_ignore', 'js_ignore', 'meezan_ignore']:
+        if file == 'i': #not in ['uncategorised', 'hbl_ignore', 'a_ignore', 'b_ignore', 'd_ignore', 'e_ignore', 'h_ignore', 'js_ignore', 'meezan_ignore']:
             images_list = os.listdir(f'dataset/cheque_formats/{file}')
             # images_list = sample(images_list, 5 if 5 < len(images_list) else len(images_list))
             for img_file in images_list:
