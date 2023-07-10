@@ -47,17 +47,17 @@ def main():
             'data': 'printed'
         },
         'axis': {
-            'name': [144, 214, 1820, 320],
-            'amount': [1757, 401, 2287, 499],
-            'micr': [422, 926, 1930, 1050],
-            'date': [1801, 87, 2275, 150],
+            'name': [140, 190, 1769, 311],
+            'amount': [1708, 380, 2224, 510],
+            'micr': [410, 901, 1876, 1021],
+            'date': [1760, 80, 2220, 145],
             'data': 'handwritten'
         },
         'california': {
-            'name': [246, 138, 1662, 432],
-            'amount': [1698, 330, 2141, 446],
-            'micr': [68, 871, 1401, 963],
-            'date': [1439, 186, 1883, 297],
+            'name': [353, 310, 1650, 475],
+            'amount': [1750, 340, 2198, 480],
+            'micr': [70, 867, 1450, 963],
+            'date': [1407, 180, 1933, 325],
             'data': 'handwritten'
         },
         'canara': {
@@ -67,21 +67,21 @@ def main():
             'date': [1831, 98, 2300, 155],
             'data': 'handwritten'
         },
-        'f': {
+        'f': {###
             'name': [274, 548, 811, 609],
             'amount': [1739, 481, 2104, 537],
             'micr': [234, 842, 2176, 922],
             'date': [1766, 200, 2125, 268],
             'data': 'printed'
         },
-        'g': {
+        'g': {###
             'name': [287, 366, 849, 433],
             'amount': [1909, 415, 2149, 462],
             'micr': [382, 830, 1754, 900],
             'date': [1499, 415, 1749, 465],
             'data': 'printed'
         },
-        'i': {
+        'i': {###
             'name': [405, 633, 779, 688],
             'amount': [1737, 331, 2129, 410],
             'micr': [248, 872, 1532, 948],
@@ -109,7 +109,7 @@ def main():
             'date': [],
             'data': 'handwritten'
         },
-        'k': {
+        'k': {###
             'name': [280, 588, 474, 634],
             'amount': [1883, 344, 2180, 422],
             'micr': [333, 819, 1503, 897],
@@ -129,7 +129,7 @@ def main():
 # CONVERT VALUES TO PERCENTAGE OF WIDTH AND HEIGHT AT THE END
     for file in dir:
         print(file)
-        if file not in ['uncategorised', 'hbl', 'a', 'b', 'd', 'e', 'h', 'js', 'meezan']:
+        if file == 'california': #not in ['uncategorised', 'hbl', 'a', 'b', 'd', 'e', 'h', 'js', 'meezan']:
             images_list = os.listdir(f'dataset/cheque_formats/{file}')
             images_list = sample(images_list, 5 if 5 < len(images_list) else len(images_list))
             p = open(f'{file}.txt', 'w')
