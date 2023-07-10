@@ -5,6 +5,8 @@ import re
 from random import sample
 import numpy as np
 
+IMG_HEIGHT = 1050
+IMG_WIDTH = 2300
 
 def text_detector_MICR(image):
     processor = TrOCRProcessor.from_pretrained("microsoft/trocr-large-printed")
@@ -39,13 +41,13 @@ def text_detector_handwritten(image):
 def main():
     dir = os.listdir('dataset/cheque_formats')
     format = {
-        'a': {
-            'name': [336, 340, 1754, 406],
-            'amount': [1835, 342, 2109, 400],
-            'micr': [339, 781, 1624, 848],
-            'date': [1542, 213, 1902, 309],
-            'data': 'printed'
-        },
+        # 'a': {
+        #     'name': [336, 340, 1754, 406],
+        #     'amount': [1835, 342, 2109, 400],
+        #     'micr': [339, 781, 1624, 848],
+        #     'date': [1542, 213, 1902, 309],
+        #     'data': 'printed'
+        # },
         'axis': {
             'name': [140, 190, 1769, 311],
             'amount': [1708, 380, 2224, 510],
@@ -61,27 +63,27 @@ def main():
             'data': 'handwritten'
         },
         'canara': {
-            'name': [200, 230, 1866, 328],
-            'amount': [1841, 407, 2300, 521],
-            'micr': [448, 940, 1920, 1046],
-            'date': [1831, 98, 2300, 155],
+            'name': [202, 224, 1822, 308],
+            'amount': [1795, 353, 2231, 526],
+            'micr': [405, 888, 1860, 1002],
+            'date': [1767, 85, 2245, 159],
             'data': 'handwritten'
         },
-        'f': {###
+        'f': {
             'name': [274, 548, 811, 609],
             'amount': [1739, 481, 2104, 537],
             'micr': [234, 842, 2176, 922],
             'date': [1766, 200, 2125, 268],
             'data': 'printed'
         },
-        'g': {###
+        'g': {
             'name': [287, 366, 849, 433],
             'amount': [1909, 415, 2149, 462],
             'micr': [382, 830, 1754, 900],
             'date': [1499, 415, 1749, 465],
             'data': 'printed'
         },
-        'i': {###
+        'i': {
             'name': [405, 633, 779, 688],
             'amount': [1737, 331, 2129, 410],
             'micr': [248, 872, 1532, 948],
@@ -89,10 +91,10 @@ def main():
             'data': 'printed'
         },
         'icici': {
-            'name': [310, 216, 2108, 322],
-            'amount': [1854, 396, 2322, 500],
-            'micr': [462, 956, 1872, 1052],
-            'date': [1835, 86, 2316, 149],
+            'name': [300, 206, 2108, 304],
+            'amount': [1787, 369, 2233, 502],
+            'micr': [462, 909, 1856, 1024],
+            'date': [1767, 76, 2232, 152],
             'data': 'handwritten'
         },
         'j': {
@@ -102,14 +104,14 @@ def main():
             'date': [849, 110, 1366, 162],
             'data': 'printed'
         },
-        'js': {
-            'name': [],
-            'amount': [],
-            'micr': [],
-            'date': [],
-            'data': 'handwritten'
-        },
-        'k': {###
+        # 'js': {
+        #     'name': [],
+        #     'amount': [],
+        #     'micr': [],
+        #     'date': [],
+        #     'data': 'handwritten'
+        # },
+        'k': {
             'name': [280, 588, 474, 634],
             'amount': [1883, 344, 2180, 422],
             'micr': [333, 819, 1503, 897],
@@ -117,26 +119,20 @@ def main():
             'data': 'printed'
         },
         'syndicate': {
-            'name': [184, 210, 1876, 314],
-            'amount': [1821, 399, 2271, 492],
-            'micr': [486, 966, 1862, 1052],
-            'date': [1773, 84, 2301, 150],
+            'name': [188, 200, 1824, 312],
+            'amount': [1766, 366, 2201, 492],
+            'micr': [441, 915, 1797, 1020],
+            'date': [1719, 67, 2231, 152],
             'data': 'handwritten'
         },
     }
 
-    # assert dir == list(format.keys())
 # CONVERT VALUES TO PERCENTAGE OF WIDTH AND HEIGHT AT THE END
     for file in dir:
         print(file)
-        if file == 'california': #not in ['uncategorised', 'hbl', 'a', 'b', 'd', 'e', 'h', 'js', 'meezan']:
+        if file == 'canara': #not in ['uncategorised', 'hbl', 'a', 'b', 'd', 'e', 'h', 'js', 'meezan']:
             images_list = os.listdir(f'dataset/cheque_formats/{file}')
-            images_list = sample(images_list, 5 if 5 < len(images_list) else len(images_list))
-            p = open(f'{file}.txt', 'w')
-            name_p = []
-            amount_p = []
-            micr_p = []
-            date_p = []
+            # images_list = sample(images_list, 5 if 5 < len(images_list) else len(images_list))
             for img_file in images_list:
                 print(img_file)
                 func = globals()[f"text_detector_{format[file]['data']}"]
@@ -151,11 +147,7 @@ def main():
                                 format[file]['name'][1]:format[file]['name'][3],
                                 format[file]['name'][0]:format[file]['name'][2]
                             ])
-                name_p.append([format[file]['name'][0]*100/width,
-                               format[file]['name'][1]*100/height,
-                               format[file]['name'][2]*100/width,
-                               format[file]['name'][3]*100/height])
-                amount = func(img[
+                amount = text_detector_printed(img[
                                 format[file]['amount'][1]:format[file]['amount'][3],
                                 format[file]['amount'][0]:format[file]['amount'][2]
                             ])
@@ -163,10 +155,6 @@ def main():
                                 format[file]['amount'][1]:format[file]['amount'][3],
                                 format[file]['amount'][0]:format[file]['amount'][2]
                             ])
-                amount_p.append([format[file]['amount'][0] * 100 / width,
-                                format[file]['amount'][1] * 100 / height,
-                                format[file]['amount'][2] * 100 / width,
-                                format[file]['amount'][3] * 100 / height])
                 micr = text_detector_MICR(img[
                                 format[file]['micr'][1]:format[file]['micr'][3],
                                 format[file]['micr'][0]:format[file]['micr'][2]
@@ -175,11 +163,7 @@ def main():
                                 format[file]['micr'][1]:format[file]['micr'][3],
                                 format[file]['micr'][0]:format[file]['micr'][2]
                             ])
-                micr_p.append([format[file]['micr'][0] * 100 / width,
-                               format[file]['micr'][1] * 100 / height,
-                               format[file]['micr'][2] * 100 / width,
-                               format[file]['micr'][3] * 100 / height])
-                date = func(img[
+                date = text_detector_printed(img[
                                 format[file]['date'][1]:format[file]['date'][3],
                                 format[file]['date'][0]:format[file]['date'][2]
                             ])
@@ -187,12 +171,13 @@ def main():
                                 format[file]['date'][1]:format[file]['date'][3],
                                 format[file]['date'][0]:format[file]['date'][2]
                             ])
-                date_p.append([format[file]['date'][0] * 100 / width,
-                               format[file]['date'][1] * 100 / height,
-                               format[file]['date'][2] * 100 / width,
-                               format[file]['date'][3] * 100 / height])
                 cv2.waitKey(0)
                 # f = open(f'results/format_results/{img_file.split(".")[0]}.txt', 'w')
+                # proper_date = ''
+                # for char in date:
+                #     if char in ['0', '1', '2', '3', '4', '5', '6',' 7', '8', '9']:
+                #         proper_date += char
+                # proper_date = proper_date[:1] + '-' + proper_date[2:3] + '-' + proper_date[4:] if len(proper_date) == 7 else date
                 # micr_codes = []
                 # for string in re.split('A|B|C|D|A |B |C |D ', micr):
                 #     if string != '':
@@ -202,15 +187,10 @@ def main():
                 #         micr_codes.append(full)
                 # f.write('Name: ' + name + '\n' +
                 #         'Amount: ' + amount + '\n' +
-                #         'Date: ' + date + '\n' +
+                #         'Date: ' + proper_date + '\n' +
                 #         'Cheque Number: ' + micr_codes[0] + '\n' +
                 #         'Full MICR: ' + str([f'{micr_codes[i]} ' for i in range(len(micr_codes)-1)]) + micr_codes[-1])
                 # f.close()
-            p.write(f'name: {np.sum(np.array(name_p), 0) / len(name_p)}\n'
-                    f'amount: {np.sum(np.array(amount_p), 0) / len(amount_p)}\n'
-                    f'micr: {np.sum(np.array(micr_p), 0) / len(micr_p)}\n'
-                    f'date: {np.sum(np.array(date_p), 0) / len(date_p)}\n')
-            p.close()
 
 
 main()
