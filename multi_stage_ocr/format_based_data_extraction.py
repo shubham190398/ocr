@@ -41,13 +41,6 @@ def text_detector_handwritten(image):
 def main():
     dir = os.listdir('dataset/cheque_formats')
     format = {
-        # 'a': {
-        #     'name': [336, 340, 1754, 406],
-        #     'amount': [1835, 342, 2109, 400],
-        #     'micr': [339, 781, 1624, 848],
-        #     'date': [1542, 213, 1902, 309],
-        #     'data': 'printed'
-        # },
         'axis': {
             'name': [140, 190, 1769, 311],
             'amount': [1708, 380, 2224, 510],
@@ -104,13 +97,6 @@ def main():
             'date': [849, 110, 1366, 162],
             'data': 'printed'
         },
-        # 'js': {
-        #     'name': [],
-        #     'amount': [],
-        #     'micr': [],
-        #     'date': [],
-        #     'data': 'handwritten'
-        # },
         'k': {
             'name': [280, 588, 474, 634],
             'amount': [1883, 344, 2180, 422],
@@ -130,7 +116,7 @@ def main():
 # CONVERT VALUES TO PERCENTAGE OF WIDTH AND HEIGHT AT THE END
     for file in dir:
         print(file)
-        if file == 'canara': #not in ['uncategorised', 'hbl', 'a', 'b', 'd', 'e', 'h', 'js', 'meezan']:
+        if file == 'canara': #not in ['uncategorised', 'hbl_ignore', 'a_ignore', 'b_ignore', 'd_ignore', 'e_ignore', 'h_ignore', 'js_ignore', 'meezan_ignore']:
             images_list = os.listdir(f'dataset/cheque_formats/{file}')
             # images_list = sample(images_list, 5 if 5 < len(images_list) else len(images_list))
             for img_file in images_list:
