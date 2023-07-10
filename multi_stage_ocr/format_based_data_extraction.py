@@ -97,13 +97,6 @@ def main():
             'date': [871, 130, 1382, 192],
             'data': 'printed'
         },
-        'k': {
-            'name': [280, 588, 474, 634],
-            'amount': [1883, 344, 2180, 422],
-            'micr': [333, 819, 1503, 897],
-            'date': [1611, 233, 2005, 296],
-            'data': 'printed'
-        },
         'syndicate': {
             'name': [188, 200, 1824, 312],
             'amount': [1766, 366, 2201, 492],
@@ -123,60 +116,64 @@ def main():
                 print(img_file)
                 func = globals()[f"text_detector_{format[file]['data']}"]
                 img = cv2.imread(f'dataset/cheque_formats/{file}/{img_file}')
-                height = img.shape[0]
-                width = img.shape[1]
+                # height = img.shape[0]
+                # width = img.shape[1]
                 name = func(img[
                                 format[file]['name'][1]:format[file]['name'][3],
                                 format[file]['name'][0]:format[file]['name'][2]
                             ])
-                cv2.imshow('name', img[
-                                format[file]['name'][1]:format[file]['name'][3],
-                                format[file]['name'][0]:format[file]['name'][2]
-                            ])
+                # cv2.imshow('name', img[
+                #                 format[file]['name'][1]:format[file]['name'][3],
+                #                 format[file]['name'][0]:format[file]['name'][2]
+                #             ])
                 amount = text_detector_printed(img[
                                 format[file]['amount'][1]:format[file]['amount'][3],
                                 format[file]['amount'][0]:format[file]['amount'][2]
                             ])
-                cv2.imshow('amount', img[
-                                format[file]['amount'][1]:format[file]['amount'][3],
-                                format[file]['amount'][0]:format[file]['amount'][2]
-                            ])
+                # cv2.imshow('amount', img[
+                #                 format[file]['amount'][1]:format[file]['amount'][3],
+                #                 format[file]['amount'][0]:format[file]['amount'][2]
+                #             ])
                 micr = text_detector_MICR(img[
                                 format[file]['micr'][1]:format[file]['micr'][3],
                                 format[file]['micr'][0]:format[file]['micr'][2]
                             ])
-                cv2.imshow('micr', img[
-                                format[file]['micr'][1]:format[file]['micr'][3],
-                                format[file]['micr'][0]:format[file]['micr'][2]
-                            ])
+                # cv2.imshow('micr', img[
+                #                 format[file]['micr'][1]:format[file]['micr'][3],
+                #                 format[file]['micr'][0]:format[file]['micr'][2]
+                #             ])
                 date = text_detector_printed(img[
                                 format[file]['date'][1]:format[file]['date'][3],
                                 format[file]['date'][0]:format[file]['date'][2]
                             ])
-                cv2.imshow('date', img[
-                                format[file]['date'][1]:format[file]['date'][3],
-                                format[file]['date'][0]:format[file]['date'][2]
-                            ])
-                cv2.waitKey(0)
-                # f = open(f'results/format_results/{img_file.split(".")[0]}.txt', 'w')
-                # proper_date = ''
-                # for char in date:
-                #     if char in ['0', '1', '2', '3', '4', '5', '6',' 7', '8', '9']:
-                #         proper_date += char
-                # proper_date = proper_date[:1] + '-' + proper_date[2:3] + '-' + proper_date[4:] if len(proper_date) == 7 else date
-                # micr_codes = []
-                # for string in re.split('A|B|C|D|A |B |C |D ', micr):
-                #     if string != '':
-                #         full = ''
-                #         for sub in string.split():
-                #             full += sub
-                #         micr_codes.append(full)
-                # f.write('Name: ' + name + '\n' +
-                #         'Amount: ' + amount + '\n' +
-                #         'Date: ' + proper_date + '\n' +
-                #         'Cheque Number: ' + micr_codes[0] + '\n' +
-                #         'Full MICR: ' + str([f'{micr_codes[i]} ' for i in range(len(micr_codes)-1)]) + micr_codes[-1])
-                # f.close()
+                # cv2.imshow('date', img[
+                #                 format[file]['date'][1]:format[file]['date'][3],
+                #                 format[file]['date'][0]:format[file]['date'][2]
+                #             ])
+                # cv2.waitKey(0)
+                f = open(f'results/format_results/{img_file.split(".")[0]}.txt', 'w')
+                proper_amount = ''
+                for char in amount:
+                    if char in ['0', '1', '2', '3', '4', '5', '6',' 7', '8', '9']:
+                        proper_amount += char
+                proper_date = ''
+                for char in date:
+                    if char in ['0', '1', '2', '3', '4', '5', '6',' 7', '8', '9']:
+                        proper_date += char
+                proper_date = proper_date[:1] + '-' + proper_date[2:3] + '-' + proper_date[4:] if len(proper_date) == 7 else date
+                micr_codes = []
+                for string in re.split('A|B|C|D|A |B |C |D ', micr):
+                    if string != '':
+                        full = ''
+                        for sub in string.split():
+                            full += sub
+                        micr_codes.append(full)
+                f.write('Name: ' + name + '\n' +
+                        'Amount: ' + proper_amount + '\n' +
+                        'Date: ' + proper_date + '\n' +
+                        'Cheque Number: ' + micr_codes[0] + '\n' +
+                        'Full MICR: ' + str([f'{micr_codes[i]} ' for i in range(len(micr_codes)-1)]) + micr_codes[-1])
+                f.close()
 
 
 main()
