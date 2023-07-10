@@ -1,0 +1,5 @@
+Name: Gabriel Valiente
+Amount: 250
+Date: ZY AUG 02
+Cheque Number: 121031673
+Full MICR: ['121031673 ']10150115584906

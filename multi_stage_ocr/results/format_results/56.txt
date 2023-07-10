@@ -1,0 +1,5 @@
+Name: Wishire and Shumba,
+Amount: 3000001
+Date: 15022016
+Cheque Number: 100835
+Full MICR: ['100835 ', '500229009 ', '551452 ']31

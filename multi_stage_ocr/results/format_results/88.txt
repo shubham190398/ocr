@@ -1,0 +1,5 @@
+Name: Kadamashi Kam Prathap Reddy
+Amount: 
+Date: 23122006
+Cheque Number: 120614
+Full MICR: ['120614 ', '50015048 ']31

@@ -1,0 +1,5 @@
+Name: Shelwood Kumar Welwyn.
+Amount: 25000000
+Date: 12 0 8 2 0 1 5
+Cheque Number: 083660
+Full MICR: ['083660 ', '500023 ', '290062 ']31

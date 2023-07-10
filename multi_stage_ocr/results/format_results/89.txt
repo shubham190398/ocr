@@ -1,0 +1,5 @@
+Name: Mohammadh taper Kasha.
+Amount: 35
+Date: 0110 2005
+Cheque Number: 120613
+Full MICR: ['120613 ', '50015048 ']31

@@ -1,0 +1,5 @@
+Name: 25 Jo. Prissanna Kumar
+Amount: 6520000
+Date: 12 092009
+Cheque Number: 120611
+Full MICR: ['120611 ', '50015048 ']31

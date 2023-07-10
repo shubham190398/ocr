@@ -1,0 +1,5 @@
+Name: 1961 Mr. Tedasumann Krishna's
+Amount: 12000
+Date: 1 0 0 3 2 0 1 6
+Cheque Number: 100833
+Full MICR: ['100833 ', '500229009 ', '551452 ']31

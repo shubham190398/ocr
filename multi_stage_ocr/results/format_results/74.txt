@@ -1,0 +1,5 @@
+Name: Siririas Ramana Rao
+Amount: 26300004
+Date: 1-0-012
+Cheque Number: 083659
+Full MICR: ['083659 ', '500023 ', '290062 ']31

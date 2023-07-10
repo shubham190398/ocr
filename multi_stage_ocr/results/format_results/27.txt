@@ -1,0 +1,5 @@
+Name: TOTAL :
+Amount: 1200042
+Date: 08/02/06
+Cheque Number: 0150482880
+Full MICR: ['0150482880 ', '121000248 ']4861507788

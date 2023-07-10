@@ -1,0 +1,5 @@
+Name: 1952 Ralph Kumar Mishna -
+Amount: 35000
+Date: 25012016
+Cheque Number: 309147
+Full MICR: ['309147 ', '500211012 ', '426160 ']31

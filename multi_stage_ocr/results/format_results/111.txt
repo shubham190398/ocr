@@ -1,0 +1,5 @@
+Name: G. Jayakrishna Reddy
+Amount: 420001
+Date: 2-2-016
+Cheque Number: 083655
+Full MICR: ['083655 ', '500023 ', '290062 ']31

@@ -1,0 +1,5 @@
+Name: Bonothy Latika Makhija
+Amount: 52400005
+Date: 2-2-015
+Cheque Number: 309156
+Full MICR: ['309156 ', '500211012 ', '426160 ']31

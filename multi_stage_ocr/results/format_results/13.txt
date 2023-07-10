@@ -1,0 +1,5 @@
+Name: # Chahat Thalwar
+Amount: 42000000
+Date: 20122015
+Cheque Number: 309158
+Full MICR: ['309158 ', '500211012 ', '426160 ']31

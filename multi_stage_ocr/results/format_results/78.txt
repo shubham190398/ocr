@@ -1,0 +1,5 @@
+Name: Mamederula. Direth Kumar Heady
+Amount: 13000000
+Date: 06 06 2009
+Cheque Number: 120612
+Full MICR: ['120612 ', '50015048 ']31

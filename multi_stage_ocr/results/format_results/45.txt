@@ -1,0 +1,5 @@
+Name: 1913 B. Sherman Kumar,
+Amount: 3380000
+Date: 16022016
+Cheque Number: 100834
+Full MICR: ['100834 ', '500229009 ', '551452 ']31

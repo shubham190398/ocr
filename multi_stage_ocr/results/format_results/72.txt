@@ -1,0 +1,5 @@
+Name: P. Steve Kerman Roy
+Amount: 2056
+Date: 13032016
+Cheque Number: 083657
+Full MICR: ['083657 ', '500023 ', '290062 ']31

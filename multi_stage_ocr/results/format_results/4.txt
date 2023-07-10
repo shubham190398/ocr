@@ -1,0 +1,5 @@
+Name: IRamini-Rajib Kumar...
+Amount: 360000
+Date: 25012016
+Cheque Number: 309148
+Full MICR: ['309148 ', '500211012 ', '426160 ']31

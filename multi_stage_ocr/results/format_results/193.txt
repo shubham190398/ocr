@@ -1,0 +1,5 @@
+Name: J. Davis Kummer Singh
+Amount: 200001
+Date: 11 032016
+Cheque Number: 083656
+Full MICR: ['083656 ', '500023 ', '290062 ']31

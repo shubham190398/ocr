@@ -1,0 +1,5 @@
+Name: 1948Ashish Press #
+Amount: 30200
+Date: 65032016
+Cheque Number: 309160
+Full MICR: ['309160 ', '500211012 ', '426160 ']31

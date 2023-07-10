@@ -1,0 +1,5 @@
+Name: Konaki Satyavati
+Amount: 12040000
+Date: 20012016
+Cheque Number: 309150
+Full MICR: ['309150 ', '500211012 ', '426160 ']31

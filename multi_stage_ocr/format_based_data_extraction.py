@@ -109,7 +109,7 @@ def main():
 # CONVERT VALUES TO PERCENTAGE OF WIDTH AND HEIGHT AT THE END
     for file in dir:
         print(file)
-        if file == 'i': #not in ['uncategorised', 'hbl_ignore', 'a_ignore', 'b_ignore', 'd_ignore', 'e_ignore', 'h_ignore', 'js_ignore', 'meezan_ignore']:
+        if file not in ['uncategorised', 'hbl_ignore', 'a_ignore', 'b_ignore', 'd_ignore', 'e_ignore', 'h_ignore', 'js_ignore', 'meezan_ignore']:
             images_list = os.listdir(f'dataset/cheque_formats/{file}')
             # images_list = sample(images_list, 5 if 5 < len(images_list) else len(images_list))
             for img_file in images_list:
