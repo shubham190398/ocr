@@ -141,8 +141,6 @@ def main():
                 print(img_file)
                 func = globals()[f"text_detector_{format[file]['data']}"]
                 img = cv2.imread(f'dataset/cheque_formats/{file}/{img_file}')
-                img = cv2.resize(img, (2300, 1050))
-                cv2.imwrite(f'dataset/cheque_formats/{file}/{img_file}', img)
                 height = img.shape[0]
                 width = img.shape[1]
                 name = func(img[
