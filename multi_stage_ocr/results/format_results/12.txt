@@ -1,5 +1,5 @@
 Name: # Review Manish Other #
 Amount: 22350001
-Date: 15 0220 16
+Date: 15-02-2016
 Cheque Number: 100831
-Full MICR: ['100831 ', '500229009 ', '551452 ']31
+Full MICR: C100831C500229009A551452C31

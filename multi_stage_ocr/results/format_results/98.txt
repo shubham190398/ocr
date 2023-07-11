@@ -1,5 +1,5 @@
 Name: K.Sravadi Kumara
 Amount: 1000000
-Date: 2 5 03 2016
+Date: 25-03-2016
 Cheque Number: 309067
-Full MICR: ['309067 ', '500211012 ', '426160 ']31
+Full MICR: C309067C500211012A426160C31

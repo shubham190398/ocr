@@ -1,5 +1,5 @@
 Name: 1954 Anush Reddy
 Amount: 5000000
-Date: 1-1-201
+Date: 13-12-2017
 Cheque Number: 120616
-Full MICR: ['120616 ', '50015048 ']31
+Full MICR: C120616C50015048A 31

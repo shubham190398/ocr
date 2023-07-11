@@ -1,5 +1,5 @@
 Name: RuiRadha Bhundari
-Amount: 150000
-Date: 23 012016
+Amount: 1750000
+Date: 23-01-2016
 Cheque Number: 309153
-Full MICR: ['309153 ', '500211012 ', '426160 ']31
+Full MICR: C309153C500211012A426160C31

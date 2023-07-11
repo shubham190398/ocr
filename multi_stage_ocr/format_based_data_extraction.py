@@ -109,7 +109,7 @@ def main():
 # CONVERT VALUES TO PERCENTAGE OF WIDTH AND HEIGHT AT THE END
     for file in dir:
         print(file)
-        if file not in ['uncategorised', 'hbl_ignore', 'a_ignore', 'b_ignore', 'd_ignore', 'e_ignore', 'h_ignore', 'js_ignore', 'meezan_ignore']:
+        if file not in ['uncategorized', 'hbl_ignore', 'a_ignore', 'b_ignore', 'd_ignore', 'e_ignore', 'h_ignore', 'js_ignore', 'meezan_ignore']:
             images_list = os.listdir(f'dataset/cheque_formats/{file}')
             # images_list = sample(images_list, 5 if 5 < len(images_list) else len(images_list))
             for img_file in images_list:
@@ -154,13 +154,13 @@ def main():
                 f = open(f'results/format_results/{img_file.split(".")[0]}.txt', 'w')
                 proper_amount = ''
                 for char in amount:
-                    if char in ['0', '1', '2', '3', '4', '5', '6',' 7', '8', '9']:
+                    if char in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
                         proper_amount += char
                 proper_date = ''
                 for char in date:
-                    if char in ['0', '1', '2', '3', '4', '5', '6',' 7', '8', '9']:
+                    if char in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
                         proper_date += char
-                proper_date = proper_date[:1] + '-' + proper_date[2:3] + '-' + proper_date[4:] if len(proper_date) == 7 else date
+                proper_date = proper_date[:2] + '-' + proper_date[2:4] + '-' + proper_date[4:] if len(proper_date) == 8 else date
                 micr_codes = []
                 for string in re.split('A|B|C|D|A |B |C |D ', micr):
                     if string != '':
@@ -172,7 +172,7 @@ def main():
                         'Amount: ' + proper_amount + '\n' +
                         'Date: ' + proper_date + '\n' +
                         'Cheque Number: ' + micr_codes[0] + '\n' +
-                        'Full MICR: ' + str([f'{micr_codes[i]} ' for i in range(len(micr_codes)-1)]) + micr_codes[-1])
+                        'Full MICR: ' + micr)
                 f.close()
 
 

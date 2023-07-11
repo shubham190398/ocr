@@ -1,5 +1,5 @@
 Name: Abhilash Reddy
 Amount: 225000
-Date: 08012013
+Date: 08-01-2013
 Cheque Number: 083658
-Full MICR: ['083658 ', '500023 ', '290062 ']31
+Full MICR: C083658C500023A290062C31

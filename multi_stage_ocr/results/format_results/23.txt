@@ -1,5 +1,5 @@
 Name: # Rajum About Sunday
 Amount: 
-Date: 10 0.4 2 0 1 6
+Date: 10-04-2016
 Cheque Number: 100832
-Full MICR: ['100832 ', '500229009 ', '551452 ']31
+Full MICR: C100832C500229009A551452C31

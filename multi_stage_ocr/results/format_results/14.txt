@@ -1,5 +1,5 @@
 Name: Robert Kanna
 Amount: 1920000
-Date: 19 1 1 2 0 1 5
+Date: 19-11-2015
 Cheque Number: 309159
-Full MICR: ['309159 ', '500211012 ', '426160 ']31
+Full MICR: C309159C500211012A426160C31

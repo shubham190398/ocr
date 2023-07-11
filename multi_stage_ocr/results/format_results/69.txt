@@ -1,5 +1,5 @@
 Name: Padabad. Pradeep Kumar
 Amount: 8800
-Date: 15 032016
+Date: 15-03-2016
 Cheque Number: 083654
-Full MICR: ['083654 ', '500023 ', '290062 ']31
+Full MICR: C083654C500023A290062C31

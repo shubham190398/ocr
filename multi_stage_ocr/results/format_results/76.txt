@@ -1,5 +1,5 @@
 Name: 1961 Kummal Raw Pallis,
 Amount: 2223
-Date: 2 5 01 2 0 1 6
+Date: 25-01-2016
 Cheque Number: 100828
-Full MICR: ['100828 ', '500229009 ', '551452 ']31
+Full MICR: C100828C500229009A551452C31
