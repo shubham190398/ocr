@@ -8,6 +8,7 @@ import numpy as np
 IMG_HEIGHT = 1050
 IMG_WIDTH = 2300
 
+
 def text_detector_MICR(image):
     processor = TrOCRProcessor.from_pretrained("microsoft/trocr-large-printed")
     model = VisionEncoderDecoderModel.from_pretrained("Apocalypse-19/trocr-MICR")
