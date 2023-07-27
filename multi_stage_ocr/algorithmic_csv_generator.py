@@ -1,8 +1,8 @@
 import easyocr
 import cv2
 from typing import Any, List, Tuple, Dict
-import numpy as np
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
+import numpy as np
 
 
 def recognize_text(image_path: str, reader: Any) -> List[Tuple]:
@@ -30,18 +30,27 @@ def row_check(results: List[Tuple]) -> Dict:
     return row_dict
 
 
-def get_crops(row_dict: Dict, image_path: str) -> Dict:
-    image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-    crop_dict = {}
+def get_text(row_dict: Dict, image_path: str) -> Dict:
+    image = cv2.imread(image_path)
+    text_dict = {}
     for key, value in row_dict.items():
-        crop_dict[key] = []
+        text_dict[key] = []
         for v in value:
             x1, y1 = v[0]
             x2, y2 = v[1]
             cropped_img = image[y1:y2, x1:x2]
-            crop_dict[key].append(cropped_img)
+            text_dict[key].append(text_detector(cropped_img))
 
-    return crop_dict
+    return text_dict
+
+
+def text_detector(image: Any) -> str:
+    processor = TrOCRProcessor.from_pretrained("microsoft/trocr-large-printed")
+    model = VisionEncoderDecoderModel.from_pretrained("microsoft/trocr-large-printed")
+    pixel_values = processor(image, return_tensors="pt").pixel_values
+    generated_ids = model.generate(pixel_values)
+    generated_text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+    return generated_text
 
 
 def main() -> None:
@@ -49,7 +58,8 @@ def main() -> None:
     reader = easyocr.Reader(['en'])
     results = recognize_text(image_path, reader)
     rows = row_check(results)
-    crops = get_crops(rows, image_path)
+    texts = get_text(rows, image_path)
+    print(texts)
 
 
 if __name__ == '__main__':
