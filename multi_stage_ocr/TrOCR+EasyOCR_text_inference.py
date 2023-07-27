@@ -38,4 +38,24 @@ def main():
         count += 1
 
 
-main()
+def main2():
+
+    img_dir = os.listdir('dataset/invoices')
+    count = 1
+    for file in img_dir:
+
+        img = cv2.imread('dataset/invoices/' + file)
+        bbox_img = img.copy()
+        print('popo')
+        for coords in bbox_extract(img):
+
+            print('lll')
+            x1, y1 = coords[0]
+            x2, y2 = coords[1]
+            cv2.rectangle(bbox_img, (x1, y1), (x2, y2), (0, 0, 255), 2)
+            cv2.imwrite('results/invoice_TROCR+EasyOCR_results/bbox_imgs/' + str(count) + '.png', bbox_img)
+
+        count += 1
+
+
+main2()
