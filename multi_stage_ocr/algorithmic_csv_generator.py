@@ -82,7 +82,6 @@ def get_A_images_from_cons_rem() -> List:
             if count >= 40:
                 break
 
-
     return img_list
 
 
@@ -101,6 +100,15 @@ def get_B_images_from_cons_rem() -> List:
             if count >= 40:
                 break
 
+    return img_list
+
+
+def get_bad_images_from_cons_rem() -> List:
+    print('get_img func entered')
+    img_dir = os.listdir('dataset/bad_images/invoices')
+    img_list = []
+    for file in img_dir:
+        img_list.append(file)
 
     return img_list
 
@@ -108,9 +116,9 @@ def get_B_images_from_cons_rem() -> List:
 def main() -> None:
     print('main entered')
     reader = easyocr.Reader(['en'])
-    for file in get_A_images_from_cons_rem():
+    for file in get_bad_images_from_cons_rem():
         print(file)
-        image_path = "dataset/consolidated_remittances/" + file
+        image_path = "dataset/bad_images/invoices/" + file
         results = recognize_text(image_path, reader)
         rows = row_check(results)
         texts = get_text(rows, image_path)
