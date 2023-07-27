@@ -81,7 +81,7 @@ def get_A_images_from_cons_rem() -> List:
                 count += 1
             if count >= 40:
                 break
-            break
+
 
     return img_list
 
@@ -100,7 +100,7 @@ def get_B_images_from_cons_rem() -> List:
                 count += 1
             if count >= 40:
                 break
-            break
+
 
     return img_list
 
