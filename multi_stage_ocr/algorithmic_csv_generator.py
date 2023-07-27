@@ -4,6 +4,9 @@ from typing import Any, List, Tuple, Dict
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 import pandas as pd
 
+processor = TrOCRProcessor.from_pretrained("microsoft/trocr-large-printed")
+model = VisionEncoderDecoderModel.from_pretrained("microsoft/trocr-large-printed")
+
 
 def recognize_text(image_path: str, reader: Any) -> List[Tuple]:
     image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
@@ -45,8 +48,6 @@ def get_text(row_dict: Dict, image_path: str) -> Dict:
 
 
 def text_detector(image: Any) -> str:
-    processor = TrOCRProcessor.from_pretrained("microsoft/trocr-large-printed")
-    model = VisionEncoderDecoderModel.from_pretrained("microsoft/trocr-large-printed")
     pixel_values = processor(image, return_tensors="pt").pixel_values
     generated_ids = model.generate(pixel_values)
     generated_text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
@@ -60,11 +61,11 @@ def get_csv(texts: Dict) -> None:
             f.write(f"{text}\n")
 
     text_file = pd.read_csv("results/full_extraction/temp.txt")
-    text_file.to_csv("results/full_extraction/3_B.csv", index=None)
+    text_file.to_csv("results/full_extraction/BA_1.csv", index=None)
 
 
 def main() -> None:
-    image_path = "dataset/consolidated_remittances/3_B.png"
+    image_path = "dataset/consolidated_remittances/BA - 1.jpeg"
     reader = easyocr.Reader(['en'])
     results = recognize_text(image_path, reader)
     rows = row_check(results)
