@@ -3,6 +3,7 @@ import cv2
 from typing import Any, List, Tuple, Dict
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 import pandas as pd
+import os
 
 processor = TrOCRProcessor.from_pretrained("microsoft/trocr-large-printed")
 model = VisionEncoderDecoderModel.from_pretrained("microsoft/trocr-large-printed")
@@ -26,9 +27,9 @@ def row_check(results: List[Tuple]) -> Dict:
             last_row += 1
             last_row_y_position = y1
             row_dict[last_row] = []
-            row_dict[last_row].append([bbox[0], bbox[2]])
+            row_dict[last_row].append([[int(bbox[0][0]), int(bbox[0][1])], [int(bbox[2][0]), int(bbox[2][1])]])
         else:
-            row_dict[last_row].append([bbox[0], bbox[2]])
+            row_dict[last_row].append([[int(bbox[0][0]), int(bbox[0][1])], [int(bbox[2][0]), int(bbox[2][1])]])
 
     return row_dict
 
@@ -55,23 +56,65 @@ def text_detector(image: Any) -> str:
     return generated_text
 
 
-def get_csv(texts: Dict) -> None:
-    with open("results/full_extraction/temp.txt", "w") as f:
+def get_csv(texts: Dict, name: str) -> None:
+    with open(f"results/full_extraction/{name}.txt", "w") as f:
         for key, value in texts.items():
-            text = ",".join(value)
+            text = "|".join(value)
             f.write(f"{text}\n")
 
-    text_file = pd.read_csv("results/full_extraction/temp.txt")
-    text_file.to_csv("results/full_extraction/BA_1.csv", index=None)
+    f.close()
+    # text_file = pd.read_csv("results/full_extraction/temp.txt")
+    # text_file.to_csv("results/full_extraction/BA_1.csv", index=None)
+
+
+def get_A_images_from_cons_rem() -> List:
+    print('get_img func entered')
+    img_dir = os.listdir('dataset/consolidated_remittances')
+    count = 1
+    img_list = []
+    for file in img_dir:
+        if '_A.png' in file:
+            cv2.imshow('check', cv2.imread('dataset/consolidated_remittances/' + file))
+            key = cv2.waitKey(0)
+            if key == ord('y'):
+                img_list.append(file)
+                count += 1
+            if count >= 40:
+                break
+            break
+
+    return img_list
+
+
+def get_B_images_from_cons_rem() -> List:
+    print('get_img func entered')
+    img_dir = os.listdir('dataset/consolidated_remittances')
+    count = 1
+    img_list = []
+    for file in img_dir:
+        if '_B.png' in file:
+            cv2.imshow('check', cv2.imread('dataset/consolidated_remittances/' + file))
+            key = cv2.waitKey(0)
+            if key == ord('y'):
+                img_list.append(file)
+                count += 1
+            if count >= 40:
+                break
+            break
+
+    return img_list
 
 
 def main() -> None:
-    image_path = "dataset/consolidated_remittances/BA - 1.jpeg"
+    print('main entered')
     reader = easyocr.Reader(['en'])
-    results = recognize_text(image_path, reader)
-    rows = row_check(results)
-    texts = get_text(rows, image_path)
-    get_csv(texts)
+    for file in get_A_images_from_cons_rem():
+        print(file)
+        image_path = "dataset/consolidated_remittances/" + file
+        results = recognize_text(image_path, reader)
+        rows = row_check(results)
+        texts = get_text(rows, image_path)
+        get_csv(texts, file.split('.')[0])
 
 
 if __name__ == '__main__':
