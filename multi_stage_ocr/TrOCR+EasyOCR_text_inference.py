@@ -3,10 +3,11 @@ import cv2
 from bbox_extraction import bbox_extract
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 
+processor = TrOCRProcessor.from_pretrained("microsoft/trocr-large-printed")
+model = VisionEncoderDecoderModel.from_pretrained("microsoft/trocr-large-printed")
+
 
 def text_detector_printed(image):
-    processor = TrOCRProcessor.from_pretrained("microsoft/trocr-large-printed")
-    model = VisionEncoderDecoderModel.from_pretrained("microsoft/trocr-large-printed")
     pixel_values = processor(image, return_tensors="pt").pixel_values
     generated_ids = model.generate(pixel_values)
     generated_text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]

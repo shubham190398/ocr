@@ -37,6 +37,7 @@ def get_text(row_dict: Dict, image_path: str) -> Dict:
     image = cv2.imread(image_path)
     text_dict = {}
     for key, value in row_dict.items():
+        print(f"Extracting row {key}")
         text_dict[key] = []
         for v in value:
             x1, y1 = v[0]
