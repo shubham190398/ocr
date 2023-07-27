@@ -2,15 +2,16 @@ import easyocr
 
 
 def bbox_extract(img):
+    print('asdasd')
     reader = easyocr.Reader(['en'])
-
+    print('alalal')
     coords_list = []
     for t in reader.readtext(img):
         coords_list.insert(0, t[0])
     proper_coords_list = []
     for coords in coords_list:
         proper_coords = []
-        for coord in coords:
+        for coord in [coords[0], coords[2]]:
             proper_coords.append([int(coord[0]), int(coord[1])])
         proper_coords_list.append(proper_coords)
 
