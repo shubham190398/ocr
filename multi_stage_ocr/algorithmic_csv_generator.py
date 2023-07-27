@@ -2,7 +2,7 @@ import easyocr
 import cv2
 from typing import Any, List, Tuple, Dict
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
-import numpy as np
+import pandas as pd
 
 
 def recognize_text(image_path: str, reader: Any) -> List[Tuple]:
@@ -53,13 +53,23 @@ def text_detector(image: Any) -> str:
     return generated_text
 
 
+def get_csv(texts: Dict) -> None:
+    with open("results/full_extraction/temp.txt", "w") as f:
+        for key, value in texts.items():
+            text = ",".join(value)
+            f.write(f"{text}\n")
+
+    text_file = pd.read_csv("results/full_extraction/temp.txt")
+    text_file.to_csv("results/full_extraction/3_B.csv", index=None)
+
+
 def main() -> None:
     image_path = "dataset/consolidated_remittances/3_B.png"
     reader = easyocr.Reader(['en'])
     results = recognize_text(image_path, reader)
     rows = row_check(results)
     texts = get_text(rows, image_path)
-    print(texts)
+    get_csv(texts)
 
 
 if __name__ == '__main__':
