@@ -9,6 +9,8 @@ import os
 
 processor = TrOCRProcessor.from_pretrained("microsoft/trocr-large-printed")
 model = VisionEncoderDecoderModel.from_pretrained("microsoft/trocr-large-printed")
+processor_base = TrOCRProcessor.from_pretrained("microsoft/trocr-base-printed")
+model_base = VisionEncoderDecoderModel.from_pretrained("microsoft/trocr-base-printed")
 
 
 def recognize_text(image_path: str, reader: Any) -> List[Tuple]:
@@ -36,9 +38,10 @@ def row_check(results: List[Tuple]) -> Dict:
     return row_dict
 
 
-def get_text(row_dict: Dict, image_path: str) -> Dict:
+def get_text(row_dict: Dict, image_path: str, text_detector_choice: Any) -> Dict:
     image = cv2.imread(image_path)
     text_dict = {}
+    f = open('results/full_extraction/time_for_TROCR_word.txt', 'a')
     for key, value in row_dict.items():
         print(f"Extracting row {key}")
         text_dict[key] = []
@@ -46,7 +49,11 @@ def get_text(row_dict: Dict, image_path: str) -> Dict:
             x1, y1 = v[0]
             x2, y2 = v[1]
             cropped_img = image[y1:y2, x1:x2]
-            text_dict[key].append(text_detector(cropped_img))
+            t = time.time()
+            text_dict[key].append(text_detector_choice(cropped_img))
+            f.write(str(time.time() - t) + '\n')
+
+    f.close()
 
     return text_dict
 
@@ -55,6 +62,13 @@ def text_detector(image: Any) -> str:
     pixel_values = processor(image, return_tensors="pt").pixel_values
     generated_ids = model.generate(pixel_values)
     generated_text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+    return generated_text
+
+
+def text_detector_base(image: Any) -> str:
+    pixel_values = processor_base(image, return_tensors="pt").pixel_values
+    generated_ids = model_base.generate(pixel_values)
+    generated_text = processor_base.batch_decode(generated_ids, skip_special_tokens=True)[0]
     return generated_text
 
 
@@ -152,7 +166,7 @@ def main() -> None:
             image_path = "dataset/bad_images/invoices/" + file
             results = recognize_text(image_path, reader)
             rows = row_check(results)
-            texts = get_text(rows, image_path)
+            texts = get_text(rows, image_path, text_detector)
             get_csv(texts, file.split('.')[0])
         else:
             image_path = "dataset/bad_images/invoices/" + file
@@ -163,6 +177,33 @@ def main() -> None:
     f.close()
 
 
+def main2() -> None:
+    print('main2 entered')
+    reader = easyocr.Reader(['en'])
+
+    for file in get_bad_images_from_cons_rem():
+        print(file)
+        if int(file.split('.')[0].split('_')[1]) < 6:
+            image_path = "dataset/bad_images/invoices/" + file
+            results = recognize_text(image_path, reader)
+            rows = row_check(results)
+            texts = get_text(rows, image_path, text_detector)
+            get_csv(texts, file.split('.')[0])
+        else:
+            pass
+
+    for file in get_bad_images_from_cons_rem():
+        print(file)
+        if int(file.split('.')[0].split('_')[1]) < 6:
+            image_path = "dataset/bad_images/invoices/" + file
+            results = recognize_text(image_path, reader)
+            rows = row_check(results)
+            texts = get_text(rows, image_path, text_detector_base)
+            get_csv(texts, file.split('.')[0])
+        else:
+            pass
+
+
 
 if __name__ == '__main__':
-    main()
+    main2()
