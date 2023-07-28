@@ -1,10 +1,10 @@
-Time taken forbad_1.png is 203.8719837665558
-Time taken forbad_10.png is 0.5380978584289551
-Time taken forbad_2.png is 183.6657838821411
-Time taken forbad_3.png is 41.67249417304993
-Time taken forbad_4.png is 81.57975625991821
-Time taken forbad_5.png is 281.16791677474976
-Time taken forbad_6.png is 0.761662483215332
-Time taken forbad_7.png is 0.7502787113189697
-Time taken forbad_8.png is 0.5925095081329346
-Time taken forbad_9.png is 1.1350479125976562
+Time taken forbad_1.png is 193.3953812122345. Rows = 13
+Time taken forbad_10.png is 0.6474080085754395. Rows = 7
+Time taken forbad_2.png is 193.44718050956726. Rows = 18
+Time taken forbad_3.png is 43.82365322113037. Rows = 11
+Time taken forbad_4.png is 85.49154758453369. Rows = 5
+Time taken forbad_5.png is 311.79217195510864. Rows = 29
+Time taken forbad_6.png is 0.7558972835540771. Rows = 4
+Time taken forbad_7.png is 0.8161525726318359. Rows = 17
+Time taken forbad_8.png is 0.5935227870941162. Rows = 11
+Time taken forbad_9.png is 1.3098266124725342. Rows = 25

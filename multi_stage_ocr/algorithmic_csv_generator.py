@@ -91,7 +91,7 @@ def get_text_from_EasyOCR(image_path: str, reader: Any):
             row_dict[last_row].append([[int(bbox[0][0]), int(bbox[0][1])], [int(bbox[2][0]), int(bbox[2][1])]])
             text_dict[last_row].append(detection[1])
 
-    return text_dict
+    return row_dict, text_dict
 
 
 def get_A_images_from_cons_rem() -> List:
@@ -156,10 +156,10 @@ def main() -> None:
             get_csv(texts, file.split('.')[0])
         else:
             image_path = "dataset/bad_images/invoices/" + file
-            texts = get_text_from_EasyOCR(image_path, reader)
+            rows, texts = get_text_from_EasyOCR(image_path, reader)
             get_csv(texts, file.split('.')[0])
-        print('Time taken for' + file + ' is ' + str(time.time() - t))
-        f.write('Time taken for' + file + ' is ' + str(time.time() - t) + '\n')
+        print('Time taken for' + file + ' is ' + str(time.time() - t) + '. Rows = ' + str(max(list(rows.keys()))))
+        f.write('Time taken for' + file + ' is ' + str(time.time() - t) + '. Rows = ' + str(max(list(rows.keys()))) + '\n')
     f.close()
 
 
