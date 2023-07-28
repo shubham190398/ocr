@@ -23,7 +23,7 @@ def row_check(results: List[Tuple]) -> Dict:
     for detection in results:
         bbox = detection[0]
         x1, y1 = bbox[0]
-        if y1 - last_row_y_position > 30:
+        if y1 - last_row_y_position > 5:
             last_row += 1
             last_row_y_position = y1
             row_dict[last_row] = []
