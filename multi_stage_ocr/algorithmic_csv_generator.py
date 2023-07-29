@@ -41,7 +41,7 @@ def row_check(results: List[Tuple]) -> Dict:
 def get_text(row_dict: Dict, image_path: str, text_detector_choice: Any) -> Dict:
     image = cv2.imread(image_path)
     text_dict = {}
-    f = open('results/full_extraction/time_for_TROCR_word.txt', 'a')
+    # f = open('results/full_extraction/time_for_TROCR_word.txt', 'a')
     for key, value in row_dict.items():
         print(f"Extracting row {key}")
         text_dict[key] = []
@@ -49,11 +49,11 @@ def get_text(row_dict: Dict, image_path: str, text_detector_choice: Any) -> Dict
             x1, y1 = v[0]
             x2, y2 = v[1]
             cropped_img = image[y1:y2, x1:x2]
-            t = time.time()
+            # t = time.time()
             text_dict[key].append(text_detector_choice(cropped_img))
-            f.write(str(time.time() - t) + '\n')
+            # f.write(str(time.time() - t) + '\n')
 
-    f.close()
+    # f.close()
 
     return text_dict
 
@@ -183,7 +183,7 @@ def main2() -> None:
 
     for file in get_bad_images_from_cons_rem():
         print(file)
-        if int(file.split('.')[0].split('_')[1]) < 6:
+        if int(file.split('.')[0].split('_')[1]) < 2:
             image_path = "dataset/bad_images/invoices/" + file
             results = recognize_text(image_path, reader)
             rows = row_check(results)
@@ -194,15 +194,14 @@ def main2() -> None:
 
     for file in get_bad_images_from_cons_rem():
         print(file)
-        if int(file.split('.')[0].split('_')[1]) < 6:
+        if int(file.split('.')[0].split('_')[1]) < 2:
             image_path = "dataset/bad_images/invoices/" + file
             results = recognize_text(image_path, reader)
             rows = row_check(results)
             texts = get_text(rows, image_path, text_detector_base)
-            get_csv(texts, file.split('.')[0])
+            get_csv(texts, file.split('.')[0] + '_base')
         else:
             pass
-
 
 
 if __name__ == '__main__':
