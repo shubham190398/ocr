@@ -11,6 +11,8 @@ processor = TrOCRProcessor.from_pretrained("microsoft/trocr-large-printed")
 model = VisionEncoderDecoderModel.from_pretrained("microsoft/trocr-large-printed")
 processor_base = TrOCRProcessor.from_pretrained("microsoft/trocr-base-printed")
 model_base = VisionEncoderDecoderModel.from_pretrained("microsoft/trocr-base-printed")
+processor_MICR = TrOCRProcessor.from_pretrained("microsoft/trocr-large-printed")
+model_MICR = VisionEncoderDecoderModel.from_pretrained("Apocalypse-19/trocr-MICR")
 
 
 def recognize_text(image_path: str, reader: Any) -> List[Tuple]:
@@ -69,6 +71,13 @@ def text_detector_base(image: Any) -> str:
     pixel_values = processor_base(image, return_tensors="pt").pixel_values
     generated_ids = model_base.generate(pixel_values)
     generated_text = processor_base.batch_decode(generated_ids, skip_special_tokens=True)[0]
+    return generated_text
+
+
+def text_detector_MICR(image):
+    pixel_values = processor_MICR(image, return_tensors="pt").pixel_values
+    generated_ids = model_MICR.generate(pixel_values)
+    generated_text = processor_MICR.batch_decode(generated_ids, skip_special_tokens=True)[0]
     return generated_text
 
 
@@ -144,9 +153,19 @@ def get_B_images_from_cons_rem() -> List:
     return img_list
 
 
-def get_bad_images_from_cons_rem() -> List:
+def get_bad_images() -> List:
     print('get_img func entered')
     img_dir = os.listdir('dataset/bad_images/invoices')
+    img_list = []
+    for file in img_dir:
+        img_list.append(file)
+
+    return img_list
+
+
+def get_cheque_images() -> List:
+    print('get_img func entered')
+    img_dir = os.listdir('dataset/clientdata')
     img_list = []
     for file in img_dir:
         img_list.append(file)
@@ -159,7 +178,7 @@ def main() -> None:
     reader = easyocr.Reader(['en'])
     f = open('results/full_extraction/times_for_bad_images.txt', 'w')
 
-    for file in get_bad_images_from_cons_rem():
+    for file in get_bad_images():
         print(file)
         t = time.time()
         if int(file.split('.')[0].split('_')[1]) < 6:
@@ -181,7 +200,7 @@ def main2() -> None:
     print('main2 entered')
     reader = easyocr.Reader(['en'])
 
-    for file in get_bad_images_from_cons_rem():
+    for file in get_bad_images():
         print(file)
         if int(file.split('.')[0].split('_')[1]) < 2:
             image_path = "dataset/bad_images/invoices/" + file
@@ -192,7 +211,7 @@ def main2() -> None:
         else:
             pass
 
-    for file in get_bad_images_from_cons_rem():
+    for file in get_bad_images():
         print(file)
         if int(file.split('.')[0].split('_')[1]) < 2:
             image_path = "dataset/bad_images/invoices/" + file
@@ -204,5 +223,28 @@ def main2() -> None:
             pass
 
 
+def main_cheque() -> None:
+    print('main entered')
+    reader = easyocr.Reader(['en'])
+    f = open('results/full_extraction/times_for_cheque_images.txt', 'w')
+
+    for file in get_cheque_images():
+        if file in ['41.png', '81.png', '341.JPG']:
+            print(file)
+            t = time.time()
+            image_path = "dataset/clientdata/" + file
+            results = recognize_text(image_path, reader)
+            rows = row_check(results)
+            last_row = {list(rows.keys())[-1]: list(rows.values())[-1]}
+            rows = dict([(key, value) for key, value in rows.items()][:-1])
+            texts = get_text(rows, image_path, text_detector)
+            texts_last = get_text(last_row, image_path, text_detector_MICR)
+            texts = dict([(key, value) for key, value in texts.items()] +
+                         [(key, value) for key, value in texts_last.items()])
+            get_csv(texts, file.split('.')[0])
+            f.write('Time taken for' + file + ' is ' + str(time.time() - t) + '. Rows = ' + str(max(list(rows.keys()))) + '\n')
+    f.close()
+
+
 if __name__ == '__main__':
-    main2()
+    main_cheque()
