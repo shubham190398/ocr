@@ -1,3 +1,4 @@
+import csv
 import time
 
 import easyocr
@@ -92,6 +93,17 @@ def get_csv(texts: Dict, name: str) -> None:
     # text_file.to_csv("results/full_extraction/BA_1.csv", index=None)
 
 
+def get_csv_actual(texts: Dict, name: str) -> None:
+    with open(f'results/full_extraction/{name}.csv', 'w', encoding='UTF8', newline='') as f:
+        writer = csv.writer(f)
+        for key, value in texts.items():
+            writer.writerow(value)
+
+    f.close()
+    # text_file = pd.read_csv("results/full_extraction/temp.txt")
+    # text_file.to_csv("results/full_extraction/BA_1.csv", index=None)
+
+
 def get_text_from_EasyOCR(image_path: str, reader: Any):
     image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
     results = reader.readtext(image)
@@ -129,7 +141,7 @@ def get_A_images_from_cons_rem() -> List:
             if key == ord('y'):
                 img_list.append(file)
                 count += 1
-            if count >= 40:
+            if count >= 3:
                 break
 
     return img_list
@@ -147,7 +159,7 @@ def get_B_images_from_cons_rem() -> List:
             if key == ord('y'):
                 img_list.append(file)
                 count += 1
-            if count >= 40:
+            if count >= 3:
                 break
 
     return img_list
@@ -200,27 +212,24 @@ def main2() -> None:
     print('main2 entered')
     reader = easyocr.Reader(['en'])
 
-    for file in get_bad_images():
+    for file in get_A_images_from_cons_rem():
         print(file)
-        if int(file.split('.')[0].split('_')[1]) < 2:
-            image_path = "dataset/bad_images/invoices/" + file
-            results = recognize_text(image_path, reader)
-            rows = row_check(results)
-            texts = get_text(rows, image_path, text_detector)
-            get_csv(texts, file.split('.')[0])
-        else:
-            pass
+        image_path = "dataset/consolidated_remittances/" + file
+        results = recognize_text(image_path, reader)
+        rows = row_check(results)
+        texts = get_text(rows, image_path, text_detector)
+        get_csv_actual(texts, file.split('.')[0])
 
-    for file in get_bad_images():
-        print(file)
-        if int(file.split('.')[0].split('_')[1]) < 2:
-            image_path = "dataset/bad_images/invoices/" + file
-            results = recognize_text(image_path, reader)
-            rows = row_check(results)
-            texts = get_text(rows, image_path, text_detector_base)
-            get_csv(texts, file.split('.')[0] + '_base')
-        else:
-            pass
+    # for file in get_bad_images():
+    #     print(file)
+    #     if int(file.split('.')[0].split('_')[1]) < 2:
+    #         image_path = "dataset/bad_images/invoices/" + file
+    #         results = recognize_text(image_path, reader)
+    #         rows = row_check(results)
+    #         texts = get_text(rows, image_path, text_detector_base)
+    #         get_csv(texts, file.split('.')[0] + '_base')
+    #     else:
+    #         pass
 
 
 def main_cheque() -> None:
@@ -247,4 +256,4 @@ def main_cheque() -> None:
 
 
 if __name__ == '__main__':
-    main_cheque()
+    main2()
