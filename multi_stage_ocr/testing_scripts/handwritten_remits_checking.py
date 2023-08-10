@@ -15,7 +15,7 @@ def text_detector_handwritten(image):
 
 def main():
     dir = os.listdir('../dataset/handwritten_remits')
-    f = open('../results/handwritten_remits_text.txt', 'w')
+    f = open('../archive/handwritten_remits_text.txt', 'w')
     for file in dir:
         path = '../dataset/handwritten_remits/' + file
         img = cv2.imread(path)

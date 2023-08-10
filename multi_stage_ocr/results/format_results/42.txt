@@ -1,5 +1,0 @@
-Name: 0 0
-Amount: 250
-Date: 8.MM
-Cheque Number: 129131673
-Full MICR: A129131673A05050114584906C

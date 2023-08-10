@@ -1,5 +1,0 @@
-Name: # Rajum About Sunday
-Amount: 
-Date: 10-04-2016
-Cheque Number: 100832
-Full MICR: C100832C500229009A551452C31

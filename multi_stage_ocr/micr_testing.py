@@ -14,7 +14,7 @@ def text_detector(image):
 
 
 dir = os.listdir('dataset/live_testing')
-f = open('results/live_testing.txt', 'w')
+f = open('archive/live_testing.txt', 'w')
 
 
 for file in dir:

@@ -49,11 +49,11 @@ def thivy_trocr_large_handwritten(image):
 
 dir = os.listdir('dataset/handwritten_cheques')
 
-base_p = open('results/handwritten_results/trocr_base_printed.txt', 'a')
-base_h = open('results/handwritten_results/trocr_base_handwritten.txt', 'a')
-large_h = open('results/handwritten_results/trocr_large_handwritten.txt', 'a')
-dunnbc22 = open('results/handwritten_results/dunnbc22_trocr_large_handwritten.txt', 'a')
-thivy = open('results/handwritten_results/thivy_trocr_large_handwritten.txt', 'a')
+base_p = open('archive/handwritten_results/trocr_base_printed.txt', 'a')
+base_h = open('archive/handwritten_results/trocr_base_handwritten.txt', 'a')
+large_h = open('archive/handwritten_results/trocr_large_handwritten.txt', 'a')
+dunnbc22 = open('archive/handwritten_results/dunnbc22_trocr_large_handwritten.txt', 'a')
+thivy = open('archive/handwritten_results/thivy_trocr_large_handwritten.txt', 'a')
 
 for file in dir:
     path = 'dataset/handwritten_cheques/' + file

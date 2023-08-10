@@ -1,5 +1,0 @@
-Name: # Amit Kodam
-Amount: 210500
-Date: 20-01-2015
-Cheque Number: 309155
-Full MICR: C309155C500211012A426160C31

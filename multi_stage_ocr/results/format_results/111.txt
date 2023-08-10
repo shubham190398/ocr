@@ -1,5 +1,0 @@
-Name: G. Jayakrishna Reddy
-Amount: 420001
-Date: 27-02-2016
-Cheque Number: 083655
-Full MICR: C083655C500023A290062C31

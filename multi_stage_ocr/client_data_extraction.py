@@ -38,7 +38,7 @@ def detect_lines(img, img_name):
     for i in range(len(coordinates)):
         coords = coordinates[i]
         line_img = original_image[coords[1]:coords[3], coords[0]:coords[2]].copy()
-        # cv2.imwrite(f'results/demo_lines/{img_name}_{count}.png', line_img)
+        # cv2.imwrite(f'archive/demo_lines/{img_name}_{count}.png', line_img)
         count += 1
         line_images.append(line_img)
 
@@ -70,7 +70,7 @@ def main2(path, img_name, type_of_img):
         # img2 = img[int((8 * img.shape[0]) / 10):]
         s1 = text_detector(img1)
         # s2 = text_detector(img2)
-        f = open(f'results/client_text/{img_name}.txt', 'w')
+        f = open(f'archive/client_text/{img_name}.txt', 'w')
         f.write(s1 + "\n")
         f.close()
 
@@ -78,7 +78,7 @@ def main2(path, img_name, type_of_img):
         img = cv2.imread(path)
         imgs, coords = detect_lines(img, img_name)
         exhaust_coords = coords.copy()
-        f = open(f'results/client_text/{img_name}.txt', 'w')
+        f = open(f'archive/client_text/{img_name}.txt', 'w')
         for coord in coords:
             if coord in exhaust_coords:
                 x1, y1, x2, y2 = coord

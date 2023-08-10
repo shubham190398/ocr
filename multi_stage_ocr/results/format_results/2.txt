@@ -1,5 +1,0 @@
-Name: Jason Shyar Rao
-Amount: 2002000
-Date: 25-01-2016
-Cheque Number: 309145
-Full MICR: C309145C500211012A426160C31

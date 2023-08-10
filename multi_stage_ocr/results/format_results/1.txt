@@ -1,5 +1,0 @@
-Name: 1913 B.Shiva Kumar,
-Amount: 140000
-Date: 08-02-2016
-Cheque Number: 100830
-Full MICR: C100830C500229009A551452C31

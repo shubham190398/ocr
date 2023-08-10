@@ -24,7 +24,7 @@ def text_detector_MICR(image):
 
 def main():
     dir = os.listdir('dataset/bad_images/micr')
-    f = open('results/bad_images_micr.txt', 'w')
+    f = open('archive/bad_images_micr.txt', 'w')
     for file in dir:
         path = 'dataset/bad_images/micr/' + file
         img = cv2.imread(path)

@@ -54,14 +54,14 @@ def line_detection(path, img_name):
     for i in range(len(coordinates)):
         coord = coordinates[i]
         line_img = original_img[coord[1]:coord[3], coord[0]:coord[2]].copy()
-        cv2.imwrite(f"results/line_images/{img_name}_{count}.jpg", line_img)
+        cv2.imwrite(f"archive/line_images/{img_name}_{count}.jpg", line_img)
         count += 1
 
     return coordinates
 
 
 def word_detection(path, line_coords, img_name):
-    # image_list = os.listdir("results/line_images")
+    # image_list = os.listdir("archive/line_images")
     # image_list = [file.split(".")[0] for file in image_list]
     img = cv2.imread(path)
     image_list = []
@@ -85,7 +85,7 @@ def word_detection(path, line_coords, img_name):
         plt.imsave(f"results/word_masks/{img_name}_{count1}_mask.jpg", pred)
 
         original_img = image.copy()
-        img = cv2.imread(f"results/word_masks/{img_name}_{count1}_mask.jpg", cv2.IMREAD_GRAYSCALE)
+        img = cv2.imread(f"archive/word_masks/{img_name}_{count1}_mask.jpg", cv2.IMREAD_GRAYSCALE)
         cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU, img)
         original_img = pad_image(original_img)
         (h, w) = original_img.shape[:2]
@@ -103,12 +103,12 @@ def word_detection(path, line_coords, img_name):
             if int(w * factor_w) >= 7 and int(h * factor_h) >= 5:
                 word_coordinates.append([int(x*factor_w), int(y*factor_h), int((x+w)*factor_w), int((y+h)*factor_h)])
                 word = original_img[int(y*factor_h):int((y+h)*factor_h), int(x*factor_w):int((x+w)*factor_w)]
-                cv2.imwrite(f"results/words/{img_name}_{count1}_{count}.png", word)
+                cv2.imwrite(f"archive/words/{img_name}_{count1}_{count}.png", word)
                 count += 1
 
         count1 += 1
         all_words_coordinates.append(word_coordinates)
-        # cv2.imwrite(f"results/word_masks/{image_path}_contours.png", original_img_copy)
+        # cv2.imwrite(f"archive/word_masks/{image_path}_contours.png", original_img_copy)
 
     return all_words_coordinates
 
@@ -116,9 +116,9 @@ def word_detection(path, line_coords, img_name):
 def text_inference(path, line_coords, all_words_coordinates):
     images = []
     word_sp = []
-    # image_names = os.listdir("results/words")
+    # image_names = os.listdir("archive/words")
     # for image in image_names:
-    #     img = cv2.imread(f"results/words/{image}", cv2.IMREAD_GRAYSCALE)
+    #     img = cv2.imread(f"archive/words/{image}", cv2.IMREAD_GRAYSCALE)
     #     img = preprocess_img(img, (128, 32))
     #     img = np.expand_dims(img, axis=-1)
     #     img = img / 255
@@ -197,7 +197,7 @@ def main():
     #     line_coords = line_detection(path, img_name)
     #     all_words_coordinates = word_detection(path, line_coords, img_name)
     #     words_doc = text_inference(path, line_coords, all_words_coordinates)
-    #     cv2.imwrite(f"results/docs/doc_{img_name}.png", words_doc)
+    #     cv2.imwrite(f"archive/docs/doc_{img_name}.png", words_doc)
 
     file = "82253058_3059.png"
     path = "dataset/rated_forms/good/" + file
@@ -205,7 +205,7 @@ def main():
     line_coords = line_detection(path, img_name)
     all_words_coordinates = word_detection(path, line_coords, img_name)
     words_doc = text_inference(path, line_coords, all_words_coordinates)
-    cv2.imwrite(f"results/docs/doc_{img_name}.png", words_doc)
+    cv2.imwrite(f"archive/docs/doc_{img_name}.png", words_doc)
 
 
 

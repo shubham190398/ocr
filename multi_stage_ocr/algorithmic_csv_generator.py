@@ -44,7 +44,7 @@ def row_check(results: List[Tuple]) -> Dict:
 def get_text(row_dict: Dict, image_path: str, text_detector_choice: Any) -> Dict:
     image = cv2.imread(image_path)
     text_dict = {}
-    # f = open('results/full_extraction/time_for_TROCR_word.txt', 'a')
+    # f = open('archive/full_extraction/time_for_TROCR_word.txt', 'a')
     for key, value in row_dict.items():
         print(f"Extracting row {key}")
         text_dict[key] = []
@@ -83,25 +83,25 @@ def text_detector_MICR(image):
 
 
 def get_csv(texts: Dict, name: str) -> None:
-    with open(f"results/full_extraction/{name}.txt", "w") as f:
+    with open(f"archive/full_extraction/{name}.txt", "w") as f:
         for key, value in texts.items():
             text = "|".join(value)
             f.write(f"{text}\n")
 
     f.close()
-    # text_file = pd.read_csv("results/full_extraction/temp.txt")
-    # text_file.to_csv("results/full_extraction/BA_1.csv", index=None)
+    # text_file = pd.read_csv("archive/full_extraction/temp.txt")
+    # text_file.to_csv("archive/full_extraction/BA_1.csv", index=None)
 
 
 def get_csv_actual(texts: Dict, name: str) -> None:
-    with open(f'results/full_extraction/{name}.csv', 'w', encoding='UTF8', newline='') as f:
+    with open(f'archive/full_extraction/{name}.csv', 'w', encoding='UTF8', newline='') as f:
         writer = csv.writer(f)
         for key, value in texts.items():
             writer.writerow(value)
 
     f.close()
-    # text_file = pd.read_csv("results/full_extraction/temp.txt")
-    # text_file.to_csv("results/full_extraction/BA_1.csv", index=None)
+    # text_file = pd.read_csv("archive/full_extraction/temp.txt")
+    # text_file.to_csv("archive/full_extraction/BA_1.csv", index=None)
 
 
 def get_text_from_EasyOCR(image_path: str, reader: Any):
@@ -188,7 +188,7 @@ def get_cheque_images() -> List:
 def main() -> None:
     print('main entered')
     reader = easyocr.Reader(['en'])
-    f = open('results/full_extraction/times_for_bad_images.txt', 'w')
+    f = open('archive/full_extraction/times_for_bad_images.txt', 'w')
 
     for file in get_bad_images():
         print(file)
@@ -224,8 +224,8 @@ def main2() -> None:
     #     print(file)
     #     if int(file.split('.')[0].split('_')[1]) < 2:
     #         image_path = "dataset/bad_images/invoices/" + file
-    #         results = recognize_text(image_path, reader)
-    #         rows = row_check(results)
+    #         archive = recognize_text(image_path, reader)
+    #         rows = row_check(archive)
     #         texts = get_text(rows, image_path, text_detector_base)
     #         get_csv(texts, file.split('.')[0] + '_base')
     #     else:
@@ -235,7 +235,7 @@ def main2() -> None:
 def main_cheque() -> None:
     print('main entered')
     reader = easyocr.Reader(['en'])
-    f = open('results/full_extraction/times_for_cheque_images.txt', 'w')
+    f = open('archive/full_extraction/times_for_cheque_images.txt', 'w')
 
     for file in get_cheque_images():
         if file in ['41.png', '81.png', '341.JPG']:
