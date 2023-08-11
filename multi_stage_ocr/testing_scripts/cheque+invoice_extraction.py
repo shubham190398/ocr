@@ -29,12 +29,25 @@ def row_check(results):
     for detection in results:
         bbox = detection[0]
         x1, y1 = bbox[0]
-        if y1 - last_row_y_position > 5:
-            last_row += 1
-            last_row_y_position = y1
-            row_dict[last_row] = []
-            row_dict[last_row].append([[int(bbox[0][0]), int(bbox[0][1])], [int(bbox[2][0]), int(bbox[2][1])]])
+        if isinstance(y1, float):
+            x2, y2 = bbox[2]
+            x1 = int(x1)
+            y1 = int(y1)
+            x2 = int(x2)
+            y2 = int(y2)
+
+            for key in row_dict.keys():
+                if y1 - row_dict[key][0][0][1] <= 5:
+                    for i, bbox1 in enumerate(row_dict[key]):
+                        if bbox1[0][0] > x1:
+                            row_dict[key].insert(i, [[x1, y1], [x2, y2]])
+                            break
+                    break
         else:
+            if y1 - last_row_y_position > 5:
+                last_row += 1
+                last_row_y_position = y1
+                row_dict[last_row] = []
             row_dict[last_row].append([[int(bbox[0][0]), int(bbox[0][1])], [int(bbox[2][0]), int(bbox[2][1])]])
 
     return row_dict
@@ -48,8 +61,9 @@ def get_text(row_dict, image):
         for v in value:
             x1, y1 = v[0]
             x2, y2 = v[1]
-            cropped_img = image[y1:y2, x1:x2]
-            text_dict[key].append(text_detector(cropped_img))
+            if abs(y1 - y2) > 5 and abs(x1 - x2) > 5:
+                cropped_img = image[y1:y2, x1:x2]
+                text_dict[key].append(text_detector(cropped_img))
 
     return text_dict
 
@@ -89,6 +103,7 @@ def write_to_csv(texts, name):
 def cheque_transcribe(img, name):
 
     results = recognize_text(img)
+    # print(results)
     rows = row_check(results)
     micr_bboxes = list(rows.values())[-1]
     rows = dict(list(rows.items())[:-1])
@@ -98,14 +113,12 @@ def cheque_transcribe(img, name):
     micr_texts = []
     for bbox in micr_bboxes:
         p1, p2 = bbox
-        cv2.rectangle(img, p1, p2, (250, 0, 0), 1)
         x1, y1 = p1
         x2, y2 = p2
-        micr = img[y1:y2, x1:x2]
-        gen_text = text_detector_MICR(micr)
+        if abs(y1 - y2) > 5 and abs(x1 - x2) > 5:
+            micr = img[y1:y2, x1:x2]
+            gen_text = text_detector_MICR(micr)
         micr_texts.append(gen_text)
-    cv2.imshow('che', img)
-    cv2.waitKey(0)
     micr_text = ''.join(micr_texts)
     cheque_txt.write(micr_text + '\n')
     cheque_txt.close()
@@ -114,8 +127,6 @@ def cheque_transcribe(img, name):
 def invoice_transcribe(img, name):
     results = recognize_text(img)
     rows = row_check(results)
-    print('invoice\n')
-    print(results)
     texts = get_text(rows, img)
     write_to_csv(texts, name)
 
@@ -124,35 +135,20 @@ def main():
     pdf_dir = os.listdir('../dataset/bad_img_pdfs')
 
     for file in pdf_dir:
-        # t = time.time()
-        #
-        # pdf = pdfium.PdfDocument('../dataset/bad_img_pdfs/' + file)
-        # print(len(pdf))
-        #
-        # cheque_pdf = pdf[0]
-        # invoice_pdf = pdf[len(pdf)-1]
-        #
-        # cheque = cheque_pdf.render(scale=2).to_numpy()
-        # invoice = invoice_pdf.render(scale=2).to_numpy()
-        # name = file.split('.')[0]
-        # cheque_transcribe(cheque, name + '_cheque')
-        # invoice_transcribe(invoice, name + '_invoice')
-        # print('Time taken:' + str(time.time() - t))
-        if file == 'Bad Image 2.pdf':
-            t = time.time()
+        t = time.time()
 
-            pdf = pdfium.PdfDocument('../dataset/bad_img_pdfs/' + file)
-            print(len(pdf))
+        pdf = pdfium.PdfDocument('../dataset/bad_img_pdfs/' + file)
+        print(len(pdf))
 
-            cheque_pdf = pdf[0]
-            invoice_pdf = pdf[len(pdf) - 1]
+        cheque_pdf = pdf[0]
+        invoice_pdf = pdf[len(pdf)-1]
 
-            cheque = cheque_pdf.render(scale=2).to_numpy()
-            invoice = invoice_pdf.render(scale=2).to_numpy()
-            name = file.split('.')[0]
-            cheque_transcribe(cheque, name + '_cheque')
-            invoice_transcribe(invoice, name + '_invoice')
-            print('Time taken:' + str(time.time() - t))
+        cheque = cheque_pdf.render(scale=2).to_numpy()
+        invoice = invoice_pdf.render(scale=2).to_numpy()
+        name = file.split('.')[0]
+        cheque_transcribe(cheque, name + '_cheque')
+        invoice_transcribe(invoice, name + '_invoice')
+        print('Time taken:' + str(time.time() - t))
 
 
 if __name__ == '__main__':
