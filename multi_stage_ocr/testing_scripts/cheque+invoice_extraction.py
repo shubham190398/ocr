@@ -101,7 +101,8 @@ def cheque_transcribe(img, name):
         cv2.rectangle(img, p1, p2, (250, 0, 0), 1)
         x1, y1 = p1
         x2, y2 = p2
-        gen_text = text_detector_MICR(img[y1:y2, x1:x2])
+        micr = img[y1:y2, x1:x2]
+        gen_text = text_detector_MICR(micr)
         micr_texts.append(gen_text)
     cv2.imshow('che', img)
     cv2.waitKey(0)
