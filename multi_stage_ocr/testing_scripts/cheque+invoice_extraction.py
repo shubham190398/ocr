@@ -1,3 +1,4 @@
+import numpy as np
 import pypdfium2 as pdfium
 import cv2
 import os
@@ -61,11 +62,35 @@ def get_text(row_dict, image):
         for v in value:
             x1, y1 = v[0]
             x2, y2 = v[1]
-            if abs(y1 - y2) > 5 and abs(x1 - x2) > 5:
+            if abs(y1 - y2) > 7 and abs(x1 - x2) > 7:
                 cropped_img = image[y1:y2, x1:x2]
                 text_dict[key].append(text_detector(cropped_img))
 
     return text_dict
+
+
+def get_text_and_cheque_number(row_dict, image):
+    text_dict = {}
+    cheque_number = ''
+    last_norm = np.inf
+    for key, value in row_dict.items():
+        print(f"Extracting row {key}")
+        text_dict[key] = []
+        for v in value:
+            x1, y1 = v[0]
+            x2, y2 = v[1]
+            p = (abs(((x1+x2)/2) - image.shape[1]), (y1+y2)/2)
+            if abs(y1 - y2) > 7 and abs(x1 - x2) > 7:
+                cropped_img = image[y1:y2, x1:x2]
+                text = text_detector(cropped_img)
+                text_dict[key].append(text)
+                if text.replace('-', '').isnumeric() and not (y1 > last_norm or image.shape[1] - x1 > last_norm):
+                    norm = np.linalg.norm(p)
+                    if norm < last_norm:
+                        cheque_number = text
+                        last_norm = norm
+
+    return cheque_number, text_dict
 
 
 def text_detector(image):
@@ -103,11 +128,12 @@ def write_to_csv(texts, name):
 def cheque_transcribe(img, name):
 
     results = recognize_text(img)
-    # print(results)
     rows = row_check(results)
     micr_bboxes = list(rows.values())[-1]
     rows = dict(list(rows.items())[:-1])
+    # cheque_number, texts = get_text_and_cheque_number(rows, img)
     texts = get_text(rows, img)
+
     write_to_text(texts, name)
     cheque_txt = open('../results/cheque+invoice_full_extraction/' + name + '.txt', 'a')
     micr_texts = []
@@ -115,12 +141,14 @@ def cheque_transcribe(img, name):
         p1, p2 = bbox
         x1, y1 = p1
         x2, y2 = p2
-        if abs(y1 - y2) > 5 and abs(x1 - x2) > 5:
+        if abs(y1 - y2) > 7 and abs(x1 - x2) > 7:
             micr = img[y1:y2, x1:x2]
             gen_text = text_detector_MICR(micr)
-        micr_texts.append(gen_text)
+            micr_texts.append(gen_text)
     micr_text = ''.join(micr_texts)
     cheque_txt.write(micr_text + '\n')
+    cheque_txt.write('\n')
+    cheque_txt.write('cheque number: ' + micr_texts[0] + '\n')
     cheque_txt.close()
 
 
@@ -133,22 +161,39 @@ def invoice_transcribe(img, name):
 
 def main():
     pdf_dir = os.listdir('../dataset/bad_img_pdfs')
+    # f = open('../results/cheque+invoice_full_extraction/times_total.txt', 'w')
+    f_chq = open('../results/cheque+invoice_full_extraction/times_cheque_test1.txt', 'w')
+    # f_inv = open('../results/cheque+invoice_full_extraction/times_invoice.txt', 'w')
 
+    count = 0
     for file in pdf_dir:
-        t = time.time()
+        if file != 'Bad Image 9.pdf':
+            t = time.time()
 
-        pdf = pdfium.PdfDocument('../dataset/bad_img_pdfs/' + file)
-        print(len(pdf))
+            pdf = pdfium.PdfDocument('../dataset/bad_img_pdfs/' + file)
+            print(len(pdf))
 
-        cheque_pdf = pdf[0]
-        invoice_pdf = pdf[len(pdf)-1]
+            cheque_pdf = pdf[0]
+            invoice_pdf = pdf[len(pdf)-1]
 
-        cheque = cheque_pdf.render(scale=2).to_numpy()
-        invoice = invoice_pdf.render(scale=2).to_numpy()
-        name = file.split('.')[0]
-        cheque_transcribe(cheque, name + '_cheque')
-        invoice_transcribe(invoice, name + '_invoice')
-        print('Time taken:' + str(time.time() - t))
+            cheque = cheque_pdf.render(scale=2).to_numpy()
+            invoice = invoice_pdf.render(scale=2).to_numpy()
+            name = file.split('.')[0]
+            t_chq = time.time()
+            cheque_transcribe(cheque, name + '_cheque')
+            f_chq.write(file + ': ' + str(time.time() - t_chq) + '\n')
+            t_inv = time.time()
+            # invoice_transcribe(invoice, name + '_invoice')
+            # f_inv.write(file + ': ' + str(time.time() - t_inv) + '\n')
+            print('Time taken:' + str(time.time() - t))
+            # f.write(file + ': ' + str(time.time() - t) + '\n')
+            if count > 2:
+                break
+            count += 1
+
+    # f.close()
+    f_chq.close()
+    # f_inv.close()
 
 
 if __name__ == '__main__':
