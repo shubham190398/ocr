@@ -112,7 +112,7 @@ def text_detector_MICR(image):
 
 
 def write_to_text(texts, name):
-    with open('../results/cheque+invoice_full_extraction/' + name + '.txt', 'w') as f:
+    with open('../result/' + name + '.txt', 'w') as f:
         for key, value in texts.items():
             text = ", ".join(value)
             f.write(f"{text}\n")
@@ -121,7 +121,7 @@ def write_to_text(texts, name):
 
 
 def write_to_csv(texts, name):
-    with open('../results/cheque+invoice_full_extraction/' + name + '.csv', 'w', encoding='UTF8', newline='') as f:
+    with open('../result/' + name + '.csv', 'w', encoding='UTF8', newline='') as f:
         writer = csv.writer(f)
         for key, value in texts.items():
             writer.writerow(value)
@@ -139,7 +139,7 @@ def cheque_transcribe(img, name):
     texts = get_text(rows, img)
 
     write_to_text(texts, name)
-    cheque_txt = open('../results/cheque+invoice_full_extraction/' + name + '.txt', 'a')
+    cheque_txt = open('../result/' + name + '.txt', 'a')
     micr_texts = []
     for bbox in micr_bboxes:
         p1, p2 = bbox
@@ -164,15 +164,15 @@ def invoice_transcribe(img, name):
 
 
 def main():
-    pdf_dir = os.listdir('../dataset/bad_img_pdfs')
-    f = open('../results/cheque+invoice_full_extraction/times_total.txt', 'w')
-    f_chq = open('../results/cheque+invoice_full_extraction/times_cheque.txt', 'w')
-    f_inv = open('../results/cheque+invoice_full_extraction/times_invoice.txt', 'w')
+    pdf_dir = os.listdir('../data')
+    f = open('../result/times_total.txt', 'w')
+    f_chq = open('../result/times_cheque.txt', 'w')
+    f_inv = open('../result/times_invoice.txt', 'w')
     for file in pdf_dir:
         try:
             t = time.time()
 
-            pdf = pdfium.PdfDocument('../dataset/bad_img_pdfs/' + file)
+            pdf = pdfium.PdfDocument('../data/' + file)
 
             cheque_pdf = pdf[0]
             invoice_pdf = pdf[len(pdf)-1]
