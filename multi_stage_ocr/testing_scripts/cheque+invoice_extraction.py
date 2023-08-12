@@ -131,7 +131,8 @@ def cheque_transcribe(img, name):
     rows = row_check(results)
     micr_bboxes = list(rows.values())[-1]
     rows = dict(list(rows.items())[:-1])
-    cheque_number, texts = get_text_and_cheque_number(rows, img)
+    # cheque_number, texts = get_text_and_cheque_number(rows, img)
+    texts = get_text(rows, img)
 
     write_to_text(texts, name)
     cheque_txt = open('../results/cheque+invoice_full_extraction/' + name + '.txt', 'a')
@@ -147,7 +148,7 @@ def cheque_transcribe(img, name):
     micr_text = ''.join(micr_texts)
     cheque_txt.write(micr_text + '\n')
     cheque_txt.write('\n')
-    cheque_txt.write('cheque number: ' + cheque_number + '\n')
+    cheque_txt.write('cheque number: ' + micr_texts[0] + '\n')
     cheque_txt.close()
 
 
@@ -160,9 +161,11 @@ def invoice_transcribe(img, name):
 
 def main():
     pdf_dir = os.listdir('../dataset/bad_img_pdfs')
-    f = open('../results/cheque+invoice_full_extraction/times_total.txt', 'w')
-    f_chq = open('../results/cheque+invoice_full_extraction/times_cheque.txt', 'w')
-    f_inv = open('../results/cheque+invoice_full_extraction/times_invoice.txt', 'w')
+    # f = open('../results/cheque+invoice_full_extraction/times_total.txt', 'w')
+    f_chq = open('../results/cheque+invoice_full_extraction/times_cheque_test1.txt', 'w')
+    # f_inv = open('../results/cheque+invoice_full_extraction/times_invoice.txt', 'w')
+
+    count = 0
     for file in pdf_dir:
         if file != 'Bad Image 9.pdf':
             t = time.time()
@@ -180,14 +183,17 @@ def main():
             cheque_transcribe(cheque, name + '_cheque')
             f_chq.write(file + ': ' + str(time.time() - t_chq) + '\n')
             t_inv = time.time()
-            invoice_transcribe(invoice, name + '_invoice')
-            f_inv.write(file + ': ' + str(time.time() - t_inv) + '\n')
+            # invoice_transcribe(invoice, name + '_invoice')
+            # f_inv.write(file + ': ' + str(time.time() - t_inv) + '\n')
             print('Time taken:' + str(time.time() - t))
-            f.write(file + ': ' + str(time.time() - t) + '\n')
+            # f.write(file + ': ' + str(time.time() - t) + '\n')
+            if count > 2:
+                break
+            count += 1
 
-    f.close()
+    # f.close()
     f_chq.close()
-    f_inv.close()
+    # f_inv.close()
 
 
 if __name__ == '__main__':
