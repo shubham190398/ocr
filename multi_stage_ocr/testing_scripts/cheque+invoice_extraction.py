@@ -163,30 +163,27 @@ def main():
     f = open('../results/cheque+invoice_full_extraction/times_total.txt', 'w')
     f_chq = open('../results/cheque+invoice_full_extraction/times_cheque.txt', 'w')
     f_inv = open('../results/cheque+invoice_full_extraction/times_invoice.txt', 'w')
-    count = 0
     for file in pdf_dir:
-        t = time.time()
+        if file != 'Bad Image 9.pdf':
+            t = time.time()
 
-        pdf = pdfium.PdfDocument('../dataset/bad_img_pdfs/' + file)
-        print(len(pdf))
+            pdf = pdfium.PdfDocument('../dataset/bad_img_pdfs/' + file)
+            print(len(pdf))
 
-        cheque_pdf = pdf[0]
-        invoice_pdf = pdf[len(pdf)-1]
+            cheque_pdf = pdf[0]
+            invoice_pdf = pdf[len(pdf)-1]
 
-        cheque = cheque_pdf.render(scale=2).to_numpy()
-        invoice = invoice_pdf.render(scale=2).to_numpy()
-        name = file.split('.')[0]
-        t_chq = time.time()
-        cheque_transcribe(cheque, name + '_cheque')
-        f_chq.write(file + ': ' + str(time.time() - t_chq) + '\n')
-        t_inv = time.time()
-        invoice_transcribe(invoice, name + '_invoice')
-        f_inv.write(file + ': ' + str(time.time() - t_inv) + '\n')
-        print('Time taken:' + str(time.time() - t))
-        f.write(file + ': ' + str(time.time() - t) + '\n')
-        if count > 4:
-            break
-        count += 1
+            cheque = cheque_pdf.render(scale=2).to_numpy()
+            invoice = invoice_pdf.render(scale=2).to_numpy()
+            name = file.split('.')[0]
+            t_chq = time.time()
+            cheque_transcribe(cheque, name + '_cheque')
+            f_chq.write(file + ': ' + str(time.time() - t_chq) + '\n')
+            t_inv = time.time()
+            invoice_transcribe(invoice, name + '_invoice')
+            f_inv.write(file + ': ' + str(time.time() - t_inv) + '\n')
+            print('Time taken:' + str(time.time() - t))
+            f.write(file + ': ' + str(time.time() - t) + '\n')
 
     f.close()
     f_chq.close()
