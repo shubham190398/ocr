@@ -60,6 +60,7 @@ def row_check(results):
 
 def get_text(row_dict, image):
     text_dict = {}
+    # img = image.copy()
     for key, value in row_dict.items():
         print(f"Extracting row {key}")
         text_dict[key] = []
@@ -67,8 +68,12 @@ def get_text(row_dict, image):
             x1, y1 = v[0]
             x2, y2 = v[1]
             if abs(y1 - y2) > 7 and abs(x1 - x2) > 7:
+                # cv2.rectangle(img, (x1, y1), (x2, y2), (250, 0, 0), 1)
                 cropped_img = image[y1:y2, x1:x2]
                 text_dict[key].append(text_detector(cropped_img))
+
+    # cv2.imshow('ww', img)
+    # cv2.waitKey(0)
 
     return text_dict
 
