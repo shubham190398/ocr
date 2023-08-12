@@ -61,7 +61,7 @@ def get_text(row_dict, image):
         for v in value:
             x1, y1 = v[0]
             x2, y2 = v[1]
-            if abs(y1 - y2) > 5 and abs(x1 - x2) > 5:
+            if abs(y1 - y2) > 7 and abs(x1 - x2) > 7:
                 cropped_img = image[y1:y2, x1:x2]
                 text_dict[key].append(text_detector(cropped_img))
 
@@ -115,7 +115,7 @@ def cheque_transcribe(img, name):
         p1, p2 = bbox
         x1, y1 = p1
         x2, y2 = p2
-        if abs(y1 - y2) > 5 and abs(x1 - x2) > 5:
+        if abs(y1 - y2) > 7 and abs(x1 - x2) > 7:
             micr = img[y1:y2, x1:x2]
             gen_text = text_detector_MICR(micr)
         micr_texts.append(gen_text)
@@ -135,20 +135,21 @@ def main():
     pdf_dir = os.listdir('../dataset/bad_img_pdfs')
 
     for file in pdf_dir:
-        t = time.time()
+        if file == 'Bad Image 9.pdf':
+            t = time.time()
 
-        pdf = pdfium.PdfDocument('../dataset/bad_img_pdfs/' + file)
-        print(len(pdf))
+            pdf = pdfium.PdfDocument('../dataset/bad_img_pdfs/' + file)
+            print(len(pdf))
 
-        cheque_pdf = pdf[0]
-        invoice_pdf = pdf[len(pdf)-1]
+            cheque_pdf = pdf[0]
+            invoice_pdf = pdf[len(pdf)-1]
 
-        cheque = cheque_pdf.render(scale=2).to_numpy()
-        invoice = invoice_pdf.render(scale=2).to_numpy()
-        name = file.split('.')[0]
-        cheque_transcribe(cheque, name + '_cheque')
-        invoice_transcribe(invoice, name + '_invoice')
-        print('Time taken:' + str(time.time() - t))
+            cheque = cheque_pdf.render(scale=2).to_numpy()
+            invoice = invoice_pdf.render(scale=2).to_numpy()
+            name = file.split('.')[0]
+            # cheque_transcribe(cheque, name + '_cheque')
+            invoice_transcribe(invoice, name + '_invoice')
+            print('Time taken:' + str(time.time() - t))
 
 
 if __name__ == '__main__':
