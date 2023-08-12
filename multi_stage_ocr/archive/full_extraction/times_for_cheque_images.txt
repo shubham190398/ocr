@@ -1,0 +1,3 @@
+Time taken for341.JPG is 202.58093786239624. Rows = 22
+Time taken for41.png is 99.13771796226501. Rows = 18
+Time taken for81.png is 137.84428548812866. Rows = 17

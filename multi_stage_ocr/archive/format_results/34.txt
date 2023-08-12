@@ -1,0 +1,5 @@
+Name: 1961 Mr. Tedasumann Krishna's
+Amount: 712000
+Date: 10-03-2016
+Cheque Number: 100833
+Full MICR: C100833C500229009A551452C31

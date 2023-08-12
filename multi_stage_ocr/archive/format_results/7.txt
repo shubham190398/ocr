@@ -1,0 +1,5 @@
+Name: 1952. Shabha_Born-Kumar_
+Amount: 14000000
+Date: 2
+Cheque Number: 309151
+Full MICR: C309151C500211012A426160C31

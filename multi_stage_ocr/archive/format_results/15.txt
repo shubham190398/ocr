@@ -1,0 +1,5 @@
+Name: 1948Ashish Press #
+Amount: 30200
+Date: 65-03-2016
+Cheque Number: 309160
+Full MICR: C309160C500211012A426160C31
