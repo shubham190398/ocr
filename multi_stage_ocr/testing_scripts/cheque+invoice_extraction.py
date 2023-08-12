@@ -135,21 +135,20 @@ def main():
     pdf_dir = os.listdir('../dataset/bad_img_pdfs')
 
     for file in pdf_dir:
-        if file == 'Bad Image 9.pdf':
-            t = time.time()
+        t = time.time()
 
-            pdf = pdfium.PdfDocument('../dataset/bad_img_pdfs/' + file)
-            print(len(pdf))
+        pdf = pdfium.PdfDocument('../dataset/bad_img_pdfs/' + file)
+        print(len(pdf))
 
-            cheque_pdf = pdf[0]
-            invoice_pdf = pdf[len(pdf)-1]
+        cheque_pdf = pdf[0]
+        invoice_pdf = pdf[len(pdf)-1]
 
-            cheque = cheque_pdf.render(scale=2).to_numpy()
-            invoice = invoice_pdf.render(scale=2).to_numpy()
-            name = file.split('.')[0]
-            # cheque_transcribe(cheque, name + '_cheque')
-            invoice_transcribe(invoice, name + '_invoice')
-            print('Time taken:' + str(time.time() - t))
+        cheque = cheque_pdf.render(scale=2).to_numpy()
+        invoice = invoice_pdf.render(scale=2).to_numpy()
+        name = file.split('.')[0]
+        cheque_transcribe(cheque, name + '_cheque')
+        invoice_transcribe(invoice, name + '_invoice')
+        print('Time taken:' + str(time.time() - t))
 
 
 if __name__ == '__main__':
