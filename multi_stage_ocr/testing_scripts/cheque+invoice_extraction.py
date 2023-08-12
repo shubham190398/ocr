@@ -4,6 +4,8 @@ import cv2
 import os
 import easyocr
 import time
+
+import torch.cuda
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 import csv
 
@@ -11,9 +13,11 @@ reader = easyocr.Reader(['en'])
 
 processor = TrOCRProcessor.from_pretrained("microsoft/trocr-large-printed")
 model = VisionEncoderDecoderModel.from_pretrained("microsoft/trocr-large-printed")
+model.to(torch.device('cuda'))
 
 processor_MICR = TrOCRProcessor.from_pretrained("microsoft/trocr-large-printed")
 model_MICR = VisionEncoderDecoderModel.from_pretrained("Apocalypse-19/trocr-MICR")
+model_MICR.to(torch.device('cuda'))
 
 
 def recognize_text(img):
@@ -94,14 +98,14 @@ def get_text_and_cheque_number(row_dict, image):
 
 
 def text_detector(image):
-    pixel_values = processor(image, return_tensors="pt").pixel_values
+    pixel_values = processor(image, return_tensors="pt").pixel_values.to(torch.device('cuda'))
     generated_ids = model.generate(pixel_values)
     generated_text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
     return generated_text
 
 
 def text_detector_MICR(image):
-    pixel_values = processor_MICR(image, return_tensors="pt").pixel_values
+    pixel_values = processor_MICR(image, return_tensors="pt").pixel_values.to(torch.device('cuda'))
     generated_ids = model_MICR.generate(pixel_values)
     generated_text = processor_MICR.batch_decode(generated_ids, skip_special_tokens=True)[0]
     return generated_text
@@ -148,7 +152,7 @@ def cheque_transcribe(img, name):
     micr_text = ''.join(micr_texts)
     cheque_txt.write(micr_text + '\n')
     cheque_txt.write('\n')
-    cheque_txt.write('cheque number: ' + micr_texts[0] + '\n')
+    cheque_txt.write('cheque number: ' + micr_texts[0].replace('A', '').replace('B', '').replace('C', '').replace('D', '') + '\n')
     cheque_txt.close()
 
 
@@ -161,17 +165,14 @@ def invoice_transcribe(img, name):
 
 def main():
     pdf_dir = os.listdir('../dataset/bad_img_pdfs')
-    # f = open('../results/cheque+invoice_full_extraction/times_total.txt', 'w')
-    f_chq = open('../results/cheque+invoice_full_extraction/times_cheque_test1.txt', 'w')
-    # f_inv = open('../results/cheque+invoice_full_extraction/times_invoice.txt', 'w')
-
-    count = 0
+    f = open('../results/cheque+invoice_full_extraction/times_total.txt', 'w')
+    f_chq = open('../results/cheque+invoice_full_extraction/times_cheque.txt', 'w')
+    f_inv = open('../results/cheque+invoice_full_extraction/times_invoice.txt', 'w')
     for file in pdf_dir:
-        if file != 'Bad Image 9.pdf':
+        try:
             t = time.time()
 
             pdf = pdfium.PdfDocument('../dataset/bad_img_pdfs/' + file)
-            print(len(pdf))
 
             cheque_pdf = pdf[0]
             invoice_pdf = pdf[len(pdf)-1]
@@ -183,17 +184,16 @@ def main():
             cheque_transcribe(cheque, name + '_cheque')
             f_chq.write(file + ': ' + str(time.time() - t_chq) + '\n')
             t_inv = time.time()
-            # invoice_transcribe(invoice, name + '_invoice')
-            # f_inv.write(file + ': ' + str(time.time() - t_inv) + '\n')
+            invoice_transcribe(invoice, name + '_invoice')
+            f_inv.write(file + ': ' + str(time.time() - t_inv) + '\n')
             print('Time taken:' + str(time.time() - t))
-            # f.write(file + ': ' + str(time.time() - t) + '\n')
-            if count > 2:
-                break
-            count += 1
+            f.write(file + ': ' + str(time.time() - t) + '\n')
+        except:
+            pass
 
-    # f.close()
+    f.close()
     f_chq.close()
-    # f_inv.close()
+    f_inv.close()
 
 
 if __name__ == '__main__':
