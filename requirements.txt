@@ -18,3 +18,4 @@ easyOCR~=1.7.0
 pypdfium2~=4.18.0
 django-model-utils~=4.1.1
 sympy~=1.12
+paddleocr~=2.7.0.2
