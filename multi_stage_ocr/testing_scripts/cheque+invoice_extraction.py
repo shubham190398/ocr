@@ -126,8 +126,6 @@ def write_to_csv(texts, name):
         for key, value in texts.items():
             writer.writerow(value)
 
-    f.close()
-
 
 def cheque_transcribe(img, name):
 
