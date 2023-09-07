@@ -1,2 +1,3 @@
 ../dataset/test/1.pdf            time: 27.163614749908447
 ../dataset/bad_img_pdfs/Bad Image 2.pdf            time: 37.77280402183533
+../dataset/bad_img_pdfs/Bad Image 2.pdf            time: 38.08078098297119
